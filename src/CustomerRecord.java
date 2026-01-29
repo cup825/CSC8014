@@ -1,0 +1,36 @@
+import java.util.Date;
+
+public class CustomerRecord extends Name {
+    private final Date birth;
+    private final boolean isCommercial;
+    private final int customerNum; //Unique 工厂模式，待学
+
+    public CustomerRecord(String firstName, String lastName, Date birth, boolean isCommercial, int customerNum) {
+        super(firstName, lastName);
+        this.birth = birth;
+        this.isCommercial = isCommercial;
+        this.customerNum = customerNum;
+    }
+
+    public Date getDate() {
+        return birth;
+    }
+
+    public boolean getIsCommercial() {
+        return isCommercial;
+    }
+
+    public int getCustomerNum() {
+        return customerNum;
+    }
+
+    public String getName() {
+        return firstName + " " + lastName;
+    }
+//    You should use the java.util.Date class to represent dates in CustomerRecord.
+//    However, you must not use deprecated methods of the Date class. So, for example, in the
+//    test class, you can use java.util.Calendar to construct dates of birth of customer
+//    records. You can assume default time zone and locale
+
+}
+
