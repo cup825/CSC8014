@@ -4,7 +4,8 @@
  * @author Rouaa Yassin Kassab
  * Copyright (C) 2026 Newcastle University, UK
  */
-
+import java.util.Collection;
+import java.util.Date;
 public class VehicleManager {
 
 	/** When you add the VehicletManager.java and Vehicle.java to your project, 
@@ -39,7 +40,8 @@ public class VehicleManager {
 
 	public boolean hireVehicle(CustomerRecord customerRecord, String vehicleType, int duration) {
 		//add your code here. Do NOT change the method signature 
-		return null; 
+		//return null;
+        return false;
 	}
 
 
@@ -49,7 +51,7 @@ public class VehicleManager {
 	}	
 
 
-	public Collection<Vehicle> getVechilesByCustomer (CustomerRecord customerRecord){ 
+	public Collection<Vehicle> getVechilesByCustomer (CustomerRecord customerRecord){
 		//add your code here. Do NOT change the method signature
 		return null;
 	}
