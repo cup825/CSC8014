@@ -1,4 +1,4 @@
-public class Car implements Vehicle {
+public final class Car implements Vehicle {
     private final VehicleID id;
     private final String vehicleType = "Car";
     private final int distanceRequirement = 10000;

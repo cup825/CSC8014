@@ -1,6 +1,6 @@
 import java.util.Date;
 
-public class CustomerRecord extends Name {
+public final class CustomerRecord extends Name {
     private final Date birth;
     private final boolean isCommercial;
     private final int customerNum; //Unique 工厂模式，待学

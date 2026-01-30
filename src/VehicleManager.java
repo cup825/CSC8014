@@ -7,7 +7,7 @@
 
 import java.util.*;
 
-public class VehicleManager {
+public final class VehicleManager {
 
     /**
      * When you add the VehicleManager.java and Vehicle.java to your project,
@@ -52,21 +52,32 @@ public class VehicleManager {
     public Vehicle addVehicle(String vehicleType) {
         //add your code here. Do NOT change the method signature
 
-        VehicleID id=new VehicleID(vehicleType);
-        if(vehicleType.equalsIgnoreCase("Car"))
-            Car car=new Car();
-        //allVehicles.add();
+        VehicleID id = new VehicleID(vehicleType);
+        Vehicle vehicle;
+        if (vehicleType.equalsIgnoreCase("Car")) {
+            vehicle = new Car();
+            allVehicles.add(vehicle);
+        } else if (vehicleType.equalsIgnoreCase("Van")) {
+            vehicle = new Van();
+            allVehicles.add(vehicle);
+        } else
+            throw new RuntimeException();//待改
 
-        return null;
+        return vehicle;
+        //return null;
     }
 
 
+    //此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
     public int noOfAvailableVehicles(String vehicleType) {
         //add your code here. Do NOT change the method signature
         return 0;
     }
 
 
+    //如果尚不存在客户记录，此方法会根据给定信息创建一个客户记录:
+    //每个客户的名字、姓氏和出生日期的组合都是唯一的。如果您添加的客户具有相似的现有信息，该方法将抛出异常。
+    //该方法将新创建的记录添加到现有客户的数据结构中。成功时，此方法返回CustomerRecord 对象.
     public CustomerRecord addCustomerRecord(String firstName, String lastName, Date dob, Boolean hasCommercialLicense) {
         //add your code here. Do NOT change the method signature
         return null;

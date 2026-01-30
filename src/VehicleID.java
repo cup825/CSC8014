@@ -1,4 +1,4 @@
-public class VehicleID {
+public final class VehicleID {
     //private final String type; type应该写在Vehicle里
     private final String code;
     private final String numCode;
