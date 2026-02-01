@@ -52,10 +52,9 @@ public final class VehicleManager {
     public Vehicle addVehicle(String vehicleType) {
         //add your code here. Do NOT change the method signature
 
-        VehicleID id = new VehicleID(vehicleType);
         Vehicle vehicle;
         if (vehicleType.equalsIgnoreCase("Car")) {
-            vehicle = new Car();
+            vehicle = new Car();//其中包括了分配id
             allVehicles.add(vehicle);
         } else if (vehicleType.equalsIgnoreCase("Van")) {
             vehicle = new Van();

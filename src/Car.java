@@ -6,7 +6,7 @@ public final class Car implements Vehicle {
 
     public Car() {
         //构造函数只用写这两行吗？
-        id = new VehicleID("Car");
+        id = new VehicleID("Car");//自动分配id
         currentMileage = 0;
     }
 
