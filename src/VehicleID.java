@@ -6,7 +6,7 @@ public final class VehicleID {
     public VehicleID(String type) {//随机生成
         //this.type = type;
         if (!(type.equalsIgnoreCase("Car") || type.equalsIgnoreCase("Van"))) {
-            throw new IllegalArgumentException("Invalid type!");
+            throw new IllegalArgumentException("Invalid vehicle type!");
         }
         this.code = generateCode(type);
         this.numCode = generateNum(type);

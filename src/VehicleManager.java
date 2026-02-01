@@ -51,7 +51,6 @@ public final class VehicleManager {
     //    可以假设当前里程为0。如果添加的车辆是货车(van)，则可以假设该货车不需要检查。成功时，此方法需要返回车辆对象。
     public Vehicle addVehicle(String vehicleType) {
         //add your code here. Do NOT change the method signature
-
         Vehicle vehicle;
         if (vehicleType.equalsIgnoreCase("Car")) {
             vehicle = new Car();//其中包括了分配id
@@ -60,17 +59,31 @@ public final class VehicleManager {
             vehicle = new Van();
             allVehicles.add(vehicle);
         } else
-            throw new RuntimeException();//待改
+            throw new IllegalArgumentException("Invalid vehicle type!");
 
         return vehicle;
         //return null;
     }
 
-
     //此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
     public int noOfAvailableVehicles(String vehicleType) {
         //add your code here. Do NOT change the method signature
-        return 0;
+        int total = 0, numOfHired = 0;
+        for (Vehicle v : allVehicles)
+            total++;
+//        hiredVehicles.forEach((key,vehicleSet)->{ //lambda表达式还是不会用
+//            vehicleSet.forEach((vehicle->{
+//                    numOfHired++;});
+//        });
+        for (Map.Entry<Integer, HashSet<Vehicle>> entry : hiredVehicles.entrySet()) {
+            Integer key = entry.getKey(); // 获取外层HashMap的键（你的Integer类型键，如车辆分组ID/租用天数等）
+            HashSet<Vehicle> vehicleSet = entry.getValue(); // 获取内层HashSet<Vehicle>集合
+            // 第二层：遍历当前键对应的所有Vehicle对象
+            for (Vehicle vehicle : vehicleSet)
+                numOfHired++;
+        }
+
+        return total - numOfHired;
     }
 
 
@@ -79,7 +92,8 @@ public final class VehicleManager {
     //该方法将新创建的记录添加到现有客户的数据结构中。成功时，此方法返回CustomerRecord 对象.
     public CustomerRecord addCustomerRecord(String firstName, String lastName, Date dob, Boolean hasCommercialLicense) {
         //add your code here. Do NOT change the method signature
-        return null;
+        CustomerRecord customer = new CustomerRecord(firstName, lastName, dob, hasCommercialLicense);
+        return customer;
     }
 
 
