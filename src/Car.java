@@ -23,7 +23,7 @@ public final class Car implements Vehicle {
     //这个需要写成员变量吗？
     @Override
     public boolean isHired() {
-        return false;
+        return false;//待改
     }
 
     @Override
@@ -48,8 +48,12 @@ public final class Car implements Vehicle {
     // 如果达到，该方法会重置当前里程并返回true；否则，不采取任何行动并返回false。
     @Override
     public boolean performServiceIfDue() {
-        return currentMileage >= distanceRequirement;
-        //return false;
+        if (currentMileage >= distanceRequirement) {
+            currentMileage = 0;
+            return true;
+        } else
+            return false;
+        //return currentMileage >= distanceRequirement;
     }
 
 }

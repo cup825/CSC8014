@@ -1,6 +1,6 @@
 public final class Van implements Vehicle {
     private final VehicleID id;
-    private final String vehicleType = "Car";
+    private final String vehicleType = "Van";
     private final int distanceRequirement = 5000;
     private int currentMileage; //这里不需要设置为final
 
@@ -42,8 +42,11 @@ public final class Van implements Vehicle {
 
     @Override
     public boolean performServiceIfDue() {
-        return currentMileage >= distanceRequirement;
-        //return false;
+        if (currentMileage >= distanceRequirement) {
+            currentMileage = 0;
+            return true;
+        } else
+            return false;
     }
 
     //待写
