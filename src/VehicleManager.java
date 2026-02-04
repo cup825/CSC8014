@@ -92,7 +92,17 @@ public final class VehicleManager {
     //该方法将新创建的记录添加到现有客户的数据结构中。成功时，此方法返回CustomerRecord 对象.
     public CustomerRecord addCustomerRecord(String firstName, String lastName, Date dob, Boolean hasCommercialLicense) {
         //add your code here. Do NOT change the method signature
+        //judge whether customer exist
         CustomerRecord customer = new CustomerRecord(firstName, lastName, dob, hasCommercialLicense);
+//        for(CustomerRecord c:customers){
+//            if(customer.equals(c))
+//                throw new RuntimeException();//??not sure
+//        }
+        if (customers.contains(customer))//contains会除非equals，所以要重写
+            customers.add(customer);
+        else
+            throw new RuntimeException("Duplicate customer!");//待改
+
         return customer;
     }
 
