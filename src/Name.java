@@ -1,5 +1,4 @@
 import java.util.Objects;
-
 public class Name {
     private final String firstName;
     private final String lastName;
@@ -27,10 +26,10 @@ public class Name {
     public boolean equals(Object o) {
         if (this == o) //物理地址相等
             return true;
-        if (!(o instanceof Name))
+        if (o instanceof Name name)
+            return this.firstName.equals(name.firstName) && this.lastName.equals(name.lastName);
+        else
             return false;
-        Name name = (Name) o;
-        return this.firstName.equals(name.firstName) && this.lastName.equals(name.lastName);
     }
 
     @Override

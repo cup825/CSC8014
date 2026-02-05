@@ -65,12 +65,13 @@ public final class VehicleManager {
         //return null;
     }
 
-    //✔此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
+    //❌️此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
     public int noOfAvailableVehicles(String vehicleType) {
         //add your code here. Do NOT change the method signature
-        int total = 0, numOfHired = 0;
-        for (Vehicle v : allVehicles)
-            total++;
+        int total = allVehicles.size();//对吗？
+        int numOfHired = 0;
+//        for (Vehicle v : allVehicles)
+//            total++;
 //        hiredVehicles.forEach((key,vehicleSet)->{ //lambda表达式还是不会用
 //            vehicleSet.forEach((vehicle->{
 //                    numOfHired++;});

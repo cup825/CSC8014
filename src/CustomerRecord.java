@@ -43,20 +43,14 @@ public final class CustomerRecord {
         return name;
     }
 
-//    public String getName() {
-//        return name.getFirstName() + " " + name.getLastName();
-//    }
-
-    //待写
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
-        if (!(o instanceof CustomerRecord))
+        if (o instanceof CustomerRecord record)
+            return this.name.equals(record.name) && this.dateOfBirth.equals(record.dateOfBirth);
+        else
             return false;
-        CustomerRecord record = (CustomerRecord) o;
-        //return this.getName().equals(record.getName()) && this.dob.equals(record.dob);
-        return this.name.equals(record.name) && this.dateOfBirth.equals(record.dateOfBirth);
     }
 
     @Override
