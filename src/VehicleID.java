@@ -1,10 +1,10 @@
 public final class VehicleID {
-    //private final String type; type应该写在Vehicle里
+    private final String type; //改了，还是写这吧，防止重复判断类型操作
     private final String code;
     private final String numCode;
 
     public VehicleID(String type) {//随机生成
-        //this.type = type;
+        this.type = type;
         if (!(type.equalsIgnoreCase("Car") || type.equalsIgnoreCase("Van"))) {
             throw new IllegalArgumentException("Invalid vehicle type!");
         }
@@ -12,8 +12,12 @@ public final class VehicleID {
         this.numCode = generateNum(type);
     }
 
+    public String getType() {
+        return type;
+    }
+
     private String generateCode(String type) {
-        char typeChar = type.toUpperCase().charAt(0);
+        char typeChar = type.toUpperCase().charAt(0);//将类型的第一个字母转为大写并作为第一个字符
         //char typeChar=type.equalsIgnoreCase("Car")?'C':'V';
         char randomLetter = (char) ('A' + (int) (Math.random() * 26));
         char randomNum = (char) ('0' + (int) (Math.random() * 10));
