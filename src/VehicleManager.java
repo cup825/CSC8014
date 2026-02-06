@@ -25,7 +25,7 @@ public final class VehicleManager {
 //    维护一个单一的数据结构hiredVehicles，其中包含所有现有客户编号及其租用车辆的列表/集合。
 
     //以下数据结构都不确定, 先放着.
-    private ArrayList<Vehicle> allVehicles;
+    static ArrayList<Vehicle> allVehicles;
     private ArrayList<CustomerRecord> customers;
     public static HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
 
@@ -65,26 +65,15 @@ public final class VehicleManager {
         //return null;
     }
 
-    //❌️此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
+    //✔此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
     public int noOfAvailableVehicles(String vehicleType) {
         //add your code here. Do NOT change the method signature
-        int total = allVehicles.size();//对吗？
-        int numOfHired = 0;
-//        for (Vehicle v : allVehicles)
-//            total++;
-//        hiredVehicles.forEach((key,vehicleSet)->{ //lambda表达式还是不会用
-//            vehicleSet.forEach((vehicle->{
-//                    numOfHired++;});
-//        });
-        for (Map.Entry<Integer, HashSet<Vehicle>> entry : hiredVehicles.entrySet()) {
-            Integer key = entry.getKey(); // 获取外层HashMap的键（你的Integer类型键，如车辆分组ID/租用天数等）
-            HashSet<Vehicle> vehicleSet = entry.getValue(); // 获取内层HashSet<Vehicle>集合
-            // 第二层：遍历当前键对应的所有Vehicle对象
-            for (Vehicle vehicle : vehicleSet)
-                numOfHired++;
+        int count = 0;
+        for (Vehicle v : allVehicles) {
+            if (vehicleType.equalsIgnoreCase(v.getVehicleType()) && !v.isHired())
+                count++;
         }
-
-        return total - numOfHired;
+        return count;
     }
 
 
@@ -122,7 +111,7 @@ public final class VehicleManager {
     //如果车辆被租用，不应将其条目从al1Vehicles数据结构中移除。只需将车辆状态从“可用”改为“己租用”即可。
 
 
-// 1. 检查客户已租车辆数 <= 3
+    // 1. 检查客户已租车辆数 <= 3
 // 2. 找出 allVehicles 中指定类型且可用的车辆（里程 <= distanceRequirement）
 // 3. 检查客户资格：Car >=18岁；Van >=23岁且有商业驾照且不需检查
 // 4. 如果资格不符或无可用车辆 → 打印失败原因，返回 false

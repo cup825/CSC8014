@@ -1,3 +1,6 @@
+import java.util.Collection;
+import java.util.HashSet;
+
 public abstract class AbstractVehicle implements Vehicle {
     private final VehicleID id;
     //private final String vehicleType;
@@ -21,11 +24,14 @@ public abstract class AbstractVehicle implements Vehicle {
         return id.getType();
     }
 
-    //这个需要写成员变量吗？
     @Override
     public boolean isHired() {
-        //VehicleManager.hiredVehicles
-        return false;//待改
+        Collection<HashSet<Vehicle>> values = VehicleManager.hiredVehicles.values();
+        for (HashSet<Vehicle> hs : values) {
+            if (hs.contains(this))
+                return true;
+        }
+        return false;
     }
 
     @Override
