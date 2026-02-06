@@ -6,11 +6,12 @@ public abstract class AbstractVehicle implements Vehicle {
     //private final String vehicleType;
     private final int distanceRequirement;
     private int currentMileage; //这里不需要设置为final
+    private boolean isHired;
 
     public AbstractVehicle(String vehicleType) {
         id = new VehicleID(vehicleType);//自动分配id,此时已经检验是否为Car/Van
         currentMileage = 0;
-        //this.vehicleType = vehicleType;
+        isHired = false;
         distanceRequirement = vehicleType.equalsIgnoreCase("Car") ? 10000 : 5000;
     }
 

@@ -1,11 +1,12 @@
 import java.util.Date;
 import java.util.Objects;
+import java.util.Calendar;
 
 //修改继承关系
 public final class CustomerRecord {
     private final Name name;
     private final Date dateOfBirth;
-    private final boolean isCommercial;
+    private final boolean hasCommercialLicense;
     private final int customerNum;
     private static int nextCustomerNum = 1;//命名怪怪的
     //private final int customerNum; //Unique 工厂模式，待学
@@ -15,6 +16,7 @@ public final class CustomerRecord {
         if (firstName == null || lastName == null) {
             throw new IllegalArgumentException("Firstname or lastname cannot be null!");
         }
+
         if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
             throw new IllegalArgumentException("Firstname or lastname cannot be empty or blank!");
         }
@@ -22,7 +24,7 @@ public final class CustomerRecord {
             throw new IllegalArgumentException("Date of birth cannot be null!");
         this.name = new Name(firstName, lastName);
         this.dateOfBirth = new Date(birth.getTime());//防止被setTime
-        this.isCommercial = isCommercial;
+        this.hasCommercialLicense = isCommercial;
         this.customerNum = nextCustomerNum++;
     }
 
@@ -31,8 +33,8 @@ public final class CustomerRecord {
     }
 
     //若字段名是isXxx，方法名应直接写isXxx()，无需加get前缀（Java 官方编码规范）。
-    public boolean isCommercial() {
-        return isCommercial;
+    public boolean hasCommercialLicense() {
+        return hasCommercialLicense;
     }
 
     public int getCustomerNum() {

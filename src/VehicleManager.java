@@ -84,11 +84,7 @@ public final class VehicleManager {
         //add your code here. Do NOT change the method signature
         //judge whether customer exist
         CustomerRecord customer = new CustomerRecord(firstName, lastName, dob, hasCommercialLicense);
-//        for(CustomerRecord c:customers){
-//            if(customer.equals(c))
-//                throw new RuntimeException();//??not sure
-//        }
-        if (customers.contains(customer))//contains会除非equals，所以要重写
+        if (customers.contains(customer))//contains会调用其equals，所以要重写
             customers.add(customer);
         else
             throw new RuntimeException("Duplicate customer!");//待改
@@ -102,16 +98,19 @@ public final class VehicleManager {
     //如果客户可以租用车辆，且有可供租用的车辆，系统会从可用车辆中为他们提供指定类型的车辆。
     //如果车辆是面包车，且该面包车将被租用 10 天或更长时间(即持续时间>=10≥10，其中持续时间指车辆将被租用的天数)，
     // 则该面包车的状态将变为需要检查。
+
     // 如果客户无法租用车辆(或者客户理论上可以租用车辆但没有可用车辆)，则该方法返回false，
-    // 并打印出相应的失败提示(打印客户无法租用该车辆的原因)。·然后，该方法将客户编号与车辆相关联(以便公司记录已出租的车辆以及租车人信息)。它还会返回“true” 并打印出一条信息，说明客户正在租用的车辆。判断车辆是否可以租用的规则如下:
+    // 并打印出相应的失败提示(打印客户无法租用该车辆的原因)。
+
+    // 然后，该方法将客户编号与车辆相关联(以便公司记录已出租的车辆以及租车人信息)。
+    // 它还会返回“true” 并打印出一条信息，说明客户正在租用的车辆。判断车辆是否可以租用的规则如下:
     //一位客户最多可租用三辆任何类型的车辆(例如，一位客户可以租用2辆汽车和1辆货车)。
     //·车辆当前里程不得超过保养所需里程。
     //·要租用汽车，客户必须年满18岁。
     //要租用货车，客户必须拥有商业驾照且年龄至少为23岁。此外，该货车当前不得需要进行检查。
-    //如果车辆被租用，不应将其条目从al1Vehicles数据结构中移除。只需将车辆状态从“可用”改为“己租用”即可。
+    //如果车辆被租用，不应将其条目从allVehicles数据结构中移除。只需将车辆状态从“可用”改为“己租用”即可。
 
-
-    // 1. 检查客户已租车辆数 <= 3
+    // 1. ✔检查客户已租车辆数 <= 3
 // 2. 找出 allVehicles 中指定类型且可用的车辆（里程 <= distanceRequirement）
 // 3. 检查客户资格：Car >=18岁；Van >=23岁且有商业驾照且不需检查
 // 4. 如果资格不符或无可用车辆 → 打印失败原因，返回 false
@@ -119,11 +118,43 @@ public final class VehicleManager {
 // 6. 标记车辆已租用；如果 Van 且 duration >=10 → 设置为需检查
 // 7. 更新 hiredVehicles，将客户编号与车辆关联
 // 8. 打印租车信息，返回 true
+    public void printReason1() {
+        System.out.println("The customer do not have qualification to hire.");
+    }
+
+    public void printReason2() {
+        System.out.println("No available vehicle to hire.");
+    }
+
+    public boolean isCar(String type) {
+        return type.equalsIgnoreCase("Car");
+    }
+
+    public boolean isVan(String type) {
+        return type.equalsIgnoreCase("Van");
+    }
+
     public boolean hireVehicle(CustomerRecord customerRecord, String vehicleType, int duration) {
         //add your code here. Do NOT change the method signature
-        //return null;
+        HashSet<Vehicle> hs = hiredVehicles.get(customerRecord.getCustomerNum());//得到value
+        //打印资格不符合
+        //①租车数量>3的排除
+        if (hs.size() > 3) {
+            printReason1();
+            return false;
+        }
 
-        return false;
+        //②年龄不符的排除
+        int age = 2026 - customerRecord.getDateOfBirth().getYear();//待改正，用Calendar类
+        if (isCar(vehicleType) && age < 18)
+            return false;
+        if (isVan(vehicleType) && (age < 23 || (!customerRecord.hasCommercialLicense()) || Van.needCheck(duration))) {
+            printReason1();
+            return false;
+        }
+
+        //如果有资格，更新记录到hiredVehicles
+        return true;
     }
 
 
