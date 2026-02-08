@@ -26,7 +26,7 @@ public final class VehicleManager {
 
     //以下数据结构都不确定, 先放着.
     static ArrayList<Vehicle> allVehicles;
-    private ArrayList<CustomerRecord> customers;
+    private final ArrayList<CustomerRecord> customers;
     public static HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
 
     public VehicleManager() {
