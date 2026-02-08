@@ -45,6 +45,16 @@ public final class CustomerRecord {
         return name;
     }
 
+    public int getAge() {
+        Calendar today = Calendar.getInstance();
+        Calendar birth = Calendar.getInstance();
+        birth.setTime(dateOfBirth);
+        int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+        return (birth.get(Calendar.DAY_OF_YEAR) > today.get(Calendar.DAY_OF_YEAR))
+                ? age - 1
+                : age;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)

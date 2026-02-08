@@ -1,14 +1,17 @@
 public final class Van extends AbstractVehicle {
-    // int duration;
+    private boolean needCheck;
+
     public Van() {
         super("Van");
     }
 
-    //待写
-    //如果车辆是面包车，且该面包车将被租用 10 天或更长时间(即持续时间>=10≥10，其中持续时间指车辆将被租用的天数)，
-    // 则该面包车的状态将变为需要检查。
-    public static boolean needCheck(int duration) {
-        return duration >= 10;
+    public boolean needCheck() {
+//        return duration >= 10;
+        return needCheck;
+    }
+
+    public void setCheck(boolean flag) {
+        needCheck = flag;
     }
 
 //一种适用于货车的方法，如果货车需要检查则返回true，否则返回false。

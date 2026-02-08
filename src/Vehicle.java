@@ -47,7 +47,10 @@ public interface Vehicle {
 	/**
 	 * set the current mileage of the vehicle
 	 */
-	public void setCurrentMileage(int mileage); 
+	public void setCurrentMileage(int mileage);
+
+    //add additional methods
+    public void setHired(boolean flag);
 
 
 	/**

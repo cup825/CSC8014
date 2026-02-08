@@ -25,14 +25,16 @@ public abstract class AbstractVehicle implements Vehicle {
         return id.getType();
     }
 
+    //是否被租要检查，还是直接获取成员变量？
     @Override
     public boolean isHired() {
-        Collection<HashSet<Vehicle>> values = VehicleManager.hiredVehicles.values();
-        for (HashSet<Vehicle> hs : values) {
-            if (hs.contains(this))
-                return true;
-        }
-        return false;
+//        Collection<HashSet<Vehicle>> values = VehicleManager.hiredVehicles.values();
+//        for (HashSet<Vehicle> hs : values) {
+//            if (hs.contains(this))
+//                return true;
+//        }
+//        return false;
+        return isHired;
     }
 
     @Override
@@ -52,8 +54,9 @@ public abstract class AbstractVehicle implements Vehicle {
         this.currentMileage = mileage;
     }
 
-    public void setHired(boolean flag){
-        this.isHired=flag;
+    @Override
+    public void setHired(boolean flag) {
+        this.isHired = flag;
     }
 
     //一种在服务到期时执行服务的方法。该方法会检查车辆是否已达到所需的保养里程。

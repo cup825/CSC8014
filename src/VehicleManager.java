@@ -136,32 +136,43 @@ public final class VehicleManager {
 
     public boolean hireVehicle(CustomerRecord customerRecord, String vehicleType, int duration) {
         //add your code here. Do NOT change the method signature
-        HashSet<Vehicle> hs = hiredVehicles.get(customerRecord.getCustomerNum());//得到value
+        int customerNum = customerRecord.getCustomerNum();
+        hiredVehicles.putIfAbsent(customerNum, new HashSet<>());//如果没有租车记录
+        HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerNum);//得到value
         //打印资格不符合
         //①租车数量>3的排除
-        if (hs.size() > 3) {
+        if (vehicleSet.size() >= 3) {
             printReason1();
             return false;
         }
 
         //②年龄不符的排除
-        int age = 2026 - customerRecord.getDateOfBirth().getYear();//待改正，用Calendar类
-        if (isCar(vehicleType) && age < 18)
+        //int age = 2026 - customerRecord.getDateOfBirth().getYear();//待改正，用Calendar类
+        if (isCar(vehicleType) && customerRecord.getAge() < 18) {
+            printReason1();
             return false;
-        if (isVan(vehicleType) && (age < 23 || (!customerRecord.hasCommercialLicense()) || Van.needCheck(duration))) {
+        }
+        if (isVan(vehicleType) && (customerRecord.getAge() < 23 || (!customerRecord.hasCommercialLicense()))) {
             printReason1();
             return false;
         }
 
         //3.车本身
         for (Vehicle v : allVehicles) {
-            if (!(v.isHired() || v.performServiceIfDue())) {
-                v.set
-            }
+            if (!v.getVehicleType().equalsIgnoreCase(vehicleType))//类型不匹配
+                continue;
+            if (v.isHired() || v.getCurrentMileage() >= v.getDistanceRequirement())//被租或需要维修
+                continue;
+            if (v instanceof Van van && van.needCheck())//是否在检查
+                continue;
+            if (v instanceof Van van && duration >= 10)//是否即将被检查
+                van.setCheck(true);
+            v.setHired(true);
+            vehicleSet.add(v);
+            return true;
         }
-
-        //如果有资格，更新记录到hiredVehicles
-        return true;
+        printReason2();
+        return false;//所有车辆中没有符合条件的
     }
 
 
@@ -169,7 +180,7 @@ public final class VehicleManager {
         //add your code here. Do NOT change the method signature
     }
 
-    //拼写错误，问老师
+    //拼写错误，就这吧
     public Collection<Vehicle> getVechilesByCustomer(CustomerRecord customerRecord) {
         //add your code here. Do NOT change the method signature
         return null;
