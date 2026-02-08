@@ -153,6 +153,13 @@ public final class VehicleManager {
             return false;
         }
 
+        //3.车本身
+        for (Vehicle v : allVehicles) {
+            if (!(v.isHired() || v.performServiceIfDue())) {
+                v.set
+            }
+        }
+
         //如果有资格，更新记录到hiredVehicles
         return true;
     }

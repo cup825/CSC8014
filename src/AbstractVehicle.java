@@ -52,6 +52,10 @@ public abstract class AbstractVehicle implements Vehicle {
         this.currentMileage = mileage;
     }
 
+    public void setHired(boolean flag){
+        this.isHired=flag;
+    }
+
     //一种在服务到期时执行服务的方法。该方法会检查车辆是否已达到所需的保养里程。
     // 如果达到，该方法会重置当前里程并返回true；否则，不采取任何行动并返回false。
     @Override
