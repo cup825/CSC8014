@@ -175,15 +175,43 @@ public final class VehicleManager {
         return false;//所有车辆中没有符合条件的
     }
 
-
+    //此方法会在车辆行驶达到指定里程数后，终止与给定客户记录相关联的、针对该车辆的租赁合同。
+    // 之后，该车辆可供其他人租赁。此方法的执行步骤如下:
+    //从hiredVehicles 数据结构中的客户条目里移除已归还的车辆。如果移除后该客户没有其他在租车辆，就从数据结构中删除整个客户条目。
+    //更新车辆状态，表明其不再被租用。
+    //通过添加指定的里程数来更新车辆的当前里程。
+    //若车辆需要保养，则对其进行保养。
+    //如果车辆是货车，必要时进行检查。
+    //终止不存在的合同无效。
     public void returnVehicle(VehicleID vehicleID, CustomerRecord customerRecord, int mileage) {
         //add your code here. Do NOT change the method signature
+        HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
+        for (Vehicle v : vehicleSet) {
+            if (v.getVehicleID().equals(vehicleID)) {
+                vehicleSet.remove(v);
+                if (vehicleSet.isEmpty())
+                    //hiredVehicles.remove(vehicleSet);
+                    hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
+                v.setHired(false);
+                v.setCurrentMileage(mileage + v.getCurrentMileage());
+                v.performServiceIfDue();
+                //如果车辆是货车，必要时进行检查。？不懂
+                break;
+            }
+        }
     }
 
     //拼写错误，就这吧
+    //此方法返回具有指定客户记录的客户当前租用的所有车辆（如果有）的不可修改集合。
     public Collection<Vehicle> getVechilesByCustomer(CustomerRecord customerRecord) {
         //add your code here. Do NOT change the method signature
-        return null;
+        //return hiredVehicles.get(customerRecord.getCustomerNum());
+
+        HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
+        if (vehicleSet == null)
+            return Collections.emptySet();//空集合
+        return Collections.unmodifiableSet(vehicleSet);//不可修改集合
+        //return null;
     }
 
 
