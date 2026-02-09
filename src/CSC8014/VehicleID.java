@@ -1,3 +1,5 @@
+package CSC8014;
+
 public final class VehicleID {
     private final String type; //改了，还是写这吧，防止重复判断类型操作
     private final String code;
@@ -5,7 +7,7 @@ public final class VehicleID {
 
     public VehicleID(String type) {//随机生成
         this.type = type;
-        if (!(type.equalsIgnoreCase("Car") || type.equalsIgnoreCase("Van"))) {
+        if (!(type.equalsIgnoreCase("CSC8014.Car") || type.equalsIgnoreCase("CSC8014.Van"))) {
             throw new IllegalArgumentException("Invalid vehicle type!");
         }
         this.code = generateCode(type);
@@ -18,7 +20,7 @@ public final class VehicleID {
 
     private String generateCode(String type) {
         char typeChar = type.toUpperCase().charAt(0);//将类型的第一个字母转为大写并作为第一个字符
-        //char typeChar=type.equalsIgnoreCase("Car")?'C':'V';
+        //char typeChar=type.equalsIgnoreCase("CSC8014.Car")?'C':'V';
         char randomLetter = (char) ('A' + (int) (Math.random() * 26));
         char randomNum = (char) ('0' + (int) (Math.random() * 10));
         return "" + typeChar + randomLetter + randomNum;
@@ -27,7 +29,7 @@ public final class VehicleID {
     private String generateNum(String type) {
         //怎么生成奇or偶
         int even = (int) (Math.random() * 500) * 2;
-        return type.equalsIgnoreCase("Car")
+        return type.equalsIgnoreCase("CSC8014.Car")
                 ? String.format("%03d", even)
                 : String.format("%03d", (even + 1));
     }

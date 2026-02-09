@@ -1,3 +1,5 @@
+package CSC8014;
+
 import java.util.Objects;
 public final class Name {
     private final String firstName;

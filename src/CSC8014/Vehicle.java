@@ -1,5 +1,7 @@
+package CSC8014;
+
 /**
- * Vehicle - interface to a vehicle.
+ * CSC8014.Vehicle - interface to a vehicle.
  *
  * @author Rouaa Yassin Kassab
  * Copyright (C) 2026 Newcastle University, UK
@@ -11,14 +13,14 @@ public interface Vehicle {
 	/**
 	 * Returns the unique ID of the vehicle.
 	 * All Vehicles must have an ID
-	 * @return the VehicleID object
+	 * @return the CSC8014.VehicleID object
 	 */
 	VehicleID getVehicleID();
 
 
     /**
-	 * Returns the Vehicle type.
-	 * a Vehicle can be either a car or a van
+	 * Returns the CSC8014.Vehicle type.
+	 * a CSC8014.Vehicle can be either a car or a van
 	 * @return a string representing the vehicle type ("car" or "van")
 	 */
 	String getVehicleType();
@@ -26,7 +28,7 @@ public interface Vehicle {
 
 	/**
 	 * Indicates whether the vehicle is currently hired or not. 
-	 * @return true if the Vehicle is hired; false otherwise
+	 * @return true if the CSC8014.Vehicle is hired; false otherwise
 	 */
 	boolean isHired();
 
@@ -56,7 +58,7 @@ public interface Vehicle {
 	/**
 	 * Checks whether the vehicle requires a service and performs the service if due.
 	 * If a service is required, the current mileage is reset.
-	 * @return true if the Vehicle required a service and it was performed; false otherwise
+	 * @return true if the CSC8014.Vehicle required a service and it was performed; false otherwise
 	 */
 	public boolean performServiceIfDue();
 

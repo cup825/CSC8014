@@ -1,5 +1,5 @@
-/**
- * VehicleManager
+package CSC8014; /**
+ * CSC8014.VehicleManager
  *
  * @author Rouaa Yassin Kassab
  * Copyright (C) 2026 Newcastle University, UK
@@ -10,7 +10,7 @@ import java.util.*;
 public final class VehicleManager {
 
     /**
-     * When you add the VehicleManager.java and Vehicle.java to your project,
+     * When you add the CSC8014.VehicleManager.java and CSC8014.Vehicle.java to your project,
      * you will get a compilation error
      * because the other classes are not created yet.
      * This will be resolved once you create the required classes.
@@ -52,10 +52,10 @@ public final class VehicleManager {
     public Vehicle addVehicle(String vehicleType) {
         //add your code here. Do NOT change the method signature
         Vehicle vehicle;
-        if (vehicleType.equalsIgnoreCase("Car")) {
+        if (vehicleType.equalsIgnoreCase("CSC8014.Car")) {
             vehicle = new Car();//其中包括了分配id
             allVehicles.add(vehicle);
-        } else if (vehicleType.equalsIgnoreCase("Van")) {
+        } else if (vehicleType.equalsIgnoreCase("CSC8014.Van")) {
             vehicle = new Van();
             allVehicles.add(vehicle);
         } else
@@ -112,10 +112,10 @@ public final class VehicleManager {
 
     // 1. ✔检查客户已租车辆数 <= 3
 // 2. 找出 allVehicles 中指定类型且可用的车辆（里程 <= distanceRequirement）
-// 3. 检查客户资格：Car >=18岁；Van >=23岁且有商业驾照且不需检查
+// 3. 检查客户资格：CSC8014.Car >=18岁；CSC8014.Van >=23岁且有商业驾照且不需检查
 // 4. 如果资格不符或无可用车辆 → 打印失败原因，返回 false
 // 5. 从可用车辆中选择一辆
-// 6. 标记车辆已租用；如果 Van 且 duration >=10 → 设置为需检查
+// 6. 标记车辆已租用；如果 CSC8014.Van 且 duration >=10 → 设置为需检查
 // 7. 更新 hiredVehicles，将客户编号与车辆关联
 // 8. 打印租车信息，返回 true
     public void printReason1() {
@@ -127,11 +127,11 @@ public final class VehicleManager {
     }
 
     public boolean isCar(String type) {
-        return type.equalsIgnoreCase("Car");
+        return type.equalsIgnoreCase("CSC8014.Car");
     }
 
     public boolean isVan(String type) {
-        return type.equalsIgnoreCase("Van");
+        return type.equalsIgnoreCase("CSC8014.Van");
     }
 
     public boolean hireVehicle(CustomerRecord customerRecord, String vehicleType, int duration) {

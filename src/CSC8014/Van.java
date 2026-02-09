@@ -1,8 +1,10 @@
+package CSC8014;
+
 public final class Van extends AbstractVehicle {
     private boolean needCheck;
 
     public Van() {
-        super("Van");
+        super("CSC8014.Van");
     }
 
     public boolean needCheck() {
