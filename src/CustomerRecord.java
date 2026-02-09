@@ -1,5 +1,3 @@
-package CSC8014;
-
 import java.util.Date;
 import java.util.Objects;
 import java.util.Calendar;
@@ -71,7 +69,7 @@ public final class CustomerRecord {
     public int hashCode() {
         return Objects.hash(name, dateOfBirth);
     }
-//    You should use the java.util.Date class to represent dates in CSC8014.CustomerRecord.
+//    You should use the java.util.Date class to represent dates in CustomerRecord.
 //    However, you must not use deprecated methods of the Date class. So, for example, in the
 //    test class, you can use java.util.Calendar to construct dates of birth of customer
 //    records. You can assume default time zone and locale

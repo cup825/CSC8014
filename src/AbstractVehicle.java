@@ -1,5 +1,3 @@
-package CSC8014;
-
 public abstract class AbstractVehicle implements Vehicle {
     private final VehicleID id;
     //private final String vehicleType;
@@ -8,10 +6,10 @@ public abstract class AbstractVehicle implements Vehicle {
     private boolean isHired;
 
     public AbstractVehicle(String vehicleType) {
-        id = new VehicleID(vehicleType);//自动分配id,此时已经检验是否为Car/CSC8014.Van
+        id = new VehicleID(vehicleType);//自动分配id,此时已经检验是否为Car/Van
         currentMileage = 0;
         isHired = false;
-        distanceRequirement = vehicleType.equalsIgnoreCase("CSC8014.Car") ? 10000 : 5000;
+        distanceRequirement = vehicleType.equalsIgnoreCase("Car") ? 10000 : 5000;
     }
 
     @Override
@@ -27,8 +25,8 @@ public abstract class AbstractVehicle implements Vehicle {
     //是否被租要检查，还是直接获取成员变量？
     @Override
     public boolean isHired() {
-//        Collection<HashSet<CSC8014.Vehicle>> values = CSC8014.VehicleManager.hiredVehicles.values();
-//        for (HashSet<CSC8014.Vehicle> hs : values) {
+//        Collection<HashSet<Vehicle>> values = VehicleManager.hiredVehicles.values();
+//        for (HashSet<Vehicle> hs : values) {
 //            if (hs.contains(this))
 //                return true;
 //        }
