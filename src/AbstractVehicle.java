@@ -48,6 +48,8 @@ public abstract class AbstractVehicle implements Vehicle {
 
     @Override
     public void setCurrentMileage(int mileage) {
+        if (mileage < 0)//能否=0
+            throw new IllegalArgumentException("Mileage cannot be negative.");
         this.currentMileage = mileage;
     }
 

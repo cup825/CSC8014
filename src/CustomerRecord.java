@@ -23,7 +23,7 @@ public final class CustomerRecord {
         if (birth == null)
             throw new IllegalArgumentException("Date of birth cannot be null!");
         this.name = new Name(firstName, lastName);
-        this.dateOfBirth = new Date(birth.getTime());//防止被setTime
+        this.dateOfBirth = new Date(birth.getTime());// Make defensive copies when needed (Bloch-EJ Item 50)
         this.hasCommercialLicense = isCommercial;
         this.customerNum = nextCustomerNum++;
     }
@@ -43,6 +43,7 @@ public final class CustomerRecord {
 
     public Name getName() {
         return name;
+        //return new Name(name.getFirstName(),name.getLastName());
     }
 
     public int getAge() {

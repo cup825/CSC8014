@@ -25,9 +25,9 @@ public final class VehicleManager {
 //    维护一个单一的数据结构hiredVehicles，其中包含所有现有客户编号及其租用车辆的列表/集合。
 
     //以下数据结构都不确定, 先放着.
-    static ArrayList<Vehicle> allVehicles;
+    private final ArrayList<Vehicle> allVehicles;
     private final ArrayList<CustomerRecord> customers;
-    public static HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
+    private final HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
 
     public VehicleManager() {
         allVehicles = new ArrayList<>();
@@ -35,16 +35,21 @@ public final class VehicleManager {
         hiredVehicles = new HashMap<>();
     }
 
-    public ArrayList<Vehicle> getAllVehicles() {
-        return allVehicles;
+    //返回值修改为List
+    public List<Vehicle> getAllVehicles() {
+        //return allVehicles;
+        return Collections.unmodifiableList(allVehicles);
     }
 
-    public ArrayList<CustomerRecord> getCustomers() {
-        return customers;
+    public List<CustomerRecord> getCustomers() {
+        //return customers;
+        return Collections.unmodifiableList(customers);
     }
 
-    public HashMap<Integer, HashSet<Vehicle>> getHiredVehicles() {
-        return hiredVehicles;
+    //返回值修改为Map
+    public Map<Integer, HashSet<Vehicle>> getHiredVehicles() {
+        //return hiredVehicles;
+        return Collections.unmodifiableMap(hiredVehicles);
     }
 
     //✔此方法向系统中添加指定类型（vehicleType）的新车辆，并为其分配一个车辆ID。
@@ -85,10 +90,8 @@ public final class VehicleManager {
         //judge whether customer exist
         CustomerRecord customer = new CustomerRecord(firstName, lastName, dob, hasCommercialLicense);
         if (customers.contains(customer))//contains会调用其equals，所以要重写
-            customers.add(customer);
-        else
             throw new RuntimeException("Duplicate customer!");//待改
-
+        customers.add(customer);
         return customer;
     }
 
@@ -109,15 +112,6 @@ public final class VehicleManager {
     //·要租用汽车，客户必须年满18岁。
     //要租用货车，客户必须拥有商业驾照且年龄至少为23岁。此外，该货车当前不得需要进行检查。
     //如果车辆被租用，不应将其条目从allVehicles数据结构中移除。只需将车辆状态从“可用”改为“己租用”即可。
-
-    // 1. ✔检查客户已租车辆数 <= 3
-// 2. 找出 allVehicles 中指定类型且可用的车辆（里程 <= distanceRequirement）
-// 3. 检查客户资格：Car >=18岁；Van >=23岁且有商业驾照且不需检查
-// 4. 如果资格不符或无可用车辆 → 打印失败原因，返回 false
-// 5. 从可用车辆中选择一辆
-// 6. 标记车辆已租用；如果 Van 且 duration >=10 → 设置为需检查
-// 7. 更新 hiredVehicles，将客户编号与车辆关联
-// 8. 打印租车信息，返回 true
     public void printReason1() {
         System.out.println("The customer do not have qualification to hire.");
     }
@@ -188,7 +182,7 @@ public final class VehicleManager {
         HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
         for (Vehicle v : vehicleSet) {
             if (v.getVehicleID().equals(vehicleID)) {
-                vehicleSet.remove(v);
+                vehicleSet.remove(v);//！！有问题，待修改
                 if (vehicleSet.isEmpty())
                     //hiredVehicles.remove(vehicleSet);
                     hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
