@@ -1,15 +1,16 @@
 public abstract class AbstractVehicle implements Vehicle {
     private final VehicleID id;
-    //private final String vehicleType;
+    private final String vehicleType;//...又改了
     private final int distanceRequirement;
     private int currentMileage; //这里不需要设置为final
     private boolean isHired;
 
     public AbstractVehicle(String vehicleType) {
-        id = new VehicleID(vehicleType);//自动分配id,此时已经检验是否为Car/Van
+        this.vehicleType = vehicleType;
+        id = VehicleID.getInstance(vehicleType);//仅能通过工厂方法创建ID对象
         currentMileage = 0;
         isHired = false;
-        distanceRequirement = vehicleType.equalsIgnoreCase("Car") ? 10000 : 5000;
+        distanceRequirement = vehicleType.equalsIgnoreCase(VehicleID.CAR) ? 10000 : 5000;
     }
 
     @Override
@@ -19,7 +20,8 @@ public abstract class AbstractVehicle implements Vehicle {
 
     @Override
     public String getVehicleType() {
-        return id.getType();
+        //return id.getType();
+        return vehicleType;
     }
 
     //是否被租要检查，还是直接获取成员变量？

@@ -11,7 +11,8 @@ public final class CustomerRecord {
     private static int nextCustomerNum = 1;//命名怪怪的
     //private final int customerNum; //Unique 工厂模式，待学
 
-    public CustomerRecord(String firstName, String lastName, Date birth, boolean isCommercial) {
+    //改成私有构造方法
+    private CustomerRecord(String firstName, String lastName, Date birth, boolean isCommercial) {
         //super(firstName, lastName);
         if (firstName == null || lastName == null) {
             throw new IllegalArgumentException("Firstname or lastname cannot be null!");
@@ -42,8 +43,8 @@ public final class CustomerRecord {
     }
 
     public Name getName() {
-        return name;
-        //return new Name(name.getFirstName(),name.getLastName());
+        //return name;
+        return new Name(name.getFirstName(),name.getLastName());
     }
 
     public int getAge() {

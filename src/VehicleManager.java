@@ -24,12 +24,13 @@ public final class VehicleManager {
 //    维护一个单一的数据结构 customers，用于存储所有现有的客户记录。
 //    维护一个单一的数据结构hiredVehicles，其中包含所有现有客户编号及其租用车辆的列表/集合。
 
-    //以下数据结构都不确定, 先放着.
+    //这些用不用static？
     private final ArrayList<Vehicle> allVehicles;
     private final ArrayList<CustomerRecord> customers;
     private final HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
 
-    public VehicleManager() {
+    //VehicleManager只有一个，是单例
+    private VehicleManager() {
         allVehicles = new ArrayList<>();
         customers = new ArrayList<>();
         hiredVehicles = new HashMap<>();
