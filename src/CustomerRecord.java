@@ -8,25 +8,26 @@ public final class CustomerRecord {
     private final Date dateOfBirth;
     private final boolean hasCommercialLicense;
     private final int customerNum;
-    private static int nextCustomerNum = 1;//命名怪怪的
+    private static int counter = 1;//命名怪怪的
     //private final int customerNum; //Unique 工厂模式，待学
 
     //改成私有构造方法
-    private CustomerRecord(String firstName, String lastName, Date birth, boolean isCommercial) {
+    private CustomerRecord(String firstName, String lastName, Date birth, boolean hasCommercialLicense) {
         //super(firstName, lastName);
-        if (firstName == null || lastName == null) {
-            throw new IllegalArgumentException("Firstname or lastname cannot be null!");
-        }
+//        if (firstName == null || lastName == null) {
+//            throw new IllegalArgumentException("Firstname or lastname cannot be null!");
+//        }
+//
+//        if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
+//            throw new IllegalArgumentException("Firstname or lastname cannot be empty or blank!");
+//        }
 
-        if (firstName.trim().isEmpty() || lastName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Firstname or lastname cannot be empty or blank!");
-        }
         if (birth == null)
             throw new IllegalArgumentException("Date of birth cannot be null!");
         this.name = new Name(firstName, lastName);
         this.dateOfBirth = new Date(birth.getTime());// Make defensive copies when needed (Bloch-EJ Item 50)
-        this.hasCommercialLicense = isCommercial;
-        this.customerNum = nextCustomerNum++;
+        this.hasCommercialLicense = hasCommercialLicense;
+        this.customerNum = counter++;
     }
 
     public Date getDateOfBirth() {
