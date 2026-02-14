@@ -3,7 +3,6 @@ import java.util.Objects;
 import java.util.Set;
 
 public final class VehicleID {
-    //private final String type; //改了，还是写这吧，防止重复判断类型操作
     private final String code;
     private final String numCode;
     private static final Set<VehicleID> vehicleIDs = new HashSet<>();//在这里初始化并且static，因为公用一个
@@ -17,7 +16,7 @@ public final class VehicleID {
     }
 
     //禁止直接new，只能通过静态方法调用
-    //为什么要这样呢？应该是id不能脱离Vehicle类单独存在吧，否则没有意义 ——理解的不对
+    //静态工厂方法1: 唯一性
     public static VehicleID getInstance(String type) {
         VehicleID id;
         //do-while 与while的区别：do-while是不管咋样先执行一次，然后如果while判断成立，继续执行循环
@@ -35,8 +34,7 @@ public final class VehicleID {
 
     //这两个方法只能改成静态方法吗？
     private static String generateCode(String type) {
-        char typeChar = type.toUpperCase().charAt(0);//将类型的第一个字母转为大写并作为第一个字符
-        //char typeChar=type.equalsIgnoreCase("Car")?'C':'V';
+        char typeChar = type.equalsIgnoreCase(CAR) ? 'C' : 'V';
         char randomLetter = (char) ('A' + (int) (Math.random() * 26));
         char randomNum = (char) ('0' + (int) (Math.random() * 10));
         return "" + typeChar + randomLetter + randomNum;
@@ -45,7 +43,7 @@ public final class VehicleID {
     private static String generateNum(String type) {
         //怎么生成奇or偶
         int even = (int) (Math.random() * 500) * 2;
-        return type.equalsIgnoreCase("Car")
+        return type.equalsIgnoreCase(CAR)
                 ? String.format("%03d", even)
                 : String.format("%03d", (even + 1));
     }

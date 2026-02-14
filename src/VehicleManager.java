@@ -24,16 +24,26 @@ public final class VehicleManager {
 //    维护一个单一的数据结构 customers，用于存储所有现有的客户记录。
 //    维护一个单一的数据结构hiredVehicles，其中包含所有现有客户编号及其租用车辆的列表/集合。
 
-    //这些用不用static？
-    private final ArrayList<Vehicle> allVehicles;
-    private final ArrayList<CustomerRecord> customers;
-    private final HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
+
+//    private final ArrayList<Vehicle> allVehicles;
+//    private final ArrayList<CustomerRecord> customers;
+//    private final HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
+    private final List<Vehicle> allVehicles;
+    private final List<CustomerRecord> customers;
+    private final Map<Integer, Set<Vehicle>> hiredVehicles;
+
+    //Has a static instance of itself 拥有自身静态实例
+    private static final VehicleManager INSTANCE = new VehicleManager();
 
     //VehicleManager只有一个，是单例
     private VehicleManager() {
         allVehicles = new ArrayList<>();
         customers = new ArrayList<>();
         hiredVehicles = new HashMap<>();
+    }
+
+    public static VehicleManager getInstance() {
+        return INSTANCE;
     }
 
     //返回值修改为List
@@ -48,7 +58,7 @@ public final class VehicleManager {
     }
 
     //返回值修改为Map
-    public Map<Integer, HashSet<Vehicle>> getHiredVehicles() {
+    public Map<Integer, Set<Vehicle>> getHiredVehicles() {
         //return hiredVehicles;
         return Collections.unmodifiableMap(hiredVehicles);
     }
@@ -87,11 +97,10 @@ public final class VehicleManager {
     //每个客户的名字、姓氏和出生日期的组合都是唯一的。如果您添加的客户具有相似的现有信息，该方法将抛出异常。
     //该方法将新创建的记录添加到现有客户的数据结构中。成功时，此方法返回CustomerRecord 对象.
     public CustomerRecord addCustomerRecord(String firstName, String lastName, Date dob, Boolean hasCommercialLicense) {
-        //add your code here. Do NOT change the method signature
-        //judge whether customer exist
-        CustomerRecord customer = new CustomerRecord(firstName, lastName, dob, hasCommercialLicense);
+        //改用静态工厂方法:两行都会检查是否重复，但用的不同的数据结构，意义也不同
+        CustomerRecord customer = CustomerRecord.getInstance(firstName, lastName, dob, hasCommercialLicense);
         if (customers.contains(customer))//contains会调用其equals，所以要重写
-            throw new RuntimeException("Duplicate customer!");//待改
+            throw new IllegalArgumentException("Duplicate customer!");//待改
         customers.add(customer);
         return customer;
     }
@@ -113,13 +122,6 @@ public final class VehicleManager {
     //·要租用汽车，客户必须年满18岁。
     //要租用货车，客户必须拥有商业驾照且年龄至少为23岁。此外，该货车当前不得需要进行检查。
     //如果车辆被租用，不应将其条目从allVehicles数据结构中移除。只需将车辆状态从“可用”改为“己租用”即可。
-    public void printReason1() {
-        System.out.println("The customer do not have qualification to hire.");
-    }
-
-    public void printReason2() {
-        System.out.println("No available vehicle to hire.");
-    }
 
     public boolean isCar(String type) {
         return type.equalsIgnoreCase("Car");
@@ -133,40 +135,40 @@ public final class VehicleManager {
         //add your code here. Do NOT change the method signature
         int customerNum = customerRecord.getCustomerNum();
         hiredVehicles.putIfAbsent(customerNum, new HashSet<>());//如果没有租车记录
-        HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerNum);//得到value
+        Set<Vehicle> vehicleSet = hiredVehicles.get(customerNum);//得到value
         //打印资格不符合
         //①租车数量>3的排除
         if (vehicleSet.size() >= 3) {
-            printReason1();
+            System.out.println("The number of vehicle rentals exceeds the limit of 3.");
             return false;
         }
 
         //②年龄不符的排除
         //int age = 2026 - customerRecord.getDateOfBirth().getYear();//待改正，用Calendar类
         if (isCar(vehicleType) && customerRecord.getAge() < 18) {
-            printReason1();
+            System.out.println("Customer must be at least 18 to hire a car.");
             return false;
         }
         if (isVan(vehicleType) && (customerRecord.getAge() < 23 || (!customerRecord.hasCommercialLicense()))) {
-            printReason1();
+            System.out.println("Customer must be at least 23 and has commercial license to hire a van.");
             return false;
         }
 
         //3.车本身
         for (Vehicle v : allVehicles) {
-            if (!v.getVehicleType().equalsIgnoreCase(vehicleType))//类型不匹配
+            if (!v.getVehicleType().equalsIgnoreCase(vehicleType)) //类型不匹配
                 continue;
             if (v.isHired() || v.getCurrentMileage() >= v.getDistanceRequirement())//被租或需要维修
                 continue;
             if (v instanceof Van van && van.needCheck())//是否在检查
                 continue;
+            v.setHired(true);
             if (v instanceof Van van && duration >= 10)//是否即将被检查
                 van.setCheck(true);
-            v.setHired(true);
             vehicleSet.add(v);
             return true;
         }
-        printReason2();
+        System.out.println("No available " + vehicleType + " found at the moment.");
         return false;//所有车辆中没有符合条件的
     }
 
@@ -180,7 +182,7 @@ public final class VehicleManager {
     //终止不存在的合同无效。
     public void returnVehicle(VehicleID vehicleID, CustomerRecord customerRecord, int mileage) {
         //add your code here. Do NOT change the method signature
-        HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
+        Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
         for (Vehicle v : vehicleSet) {
             if (v.getVehicleID().equals(vehicleID)) {
                 vehicleSet.remove(v);//！！有问题，待修改
@@ -202,7 +204,7 @@ public final class VehicleManager {
         //add your code here. Do NOT change the method signature
         //return hiredVehicles.get(customerRecord.getCustomerNum());
 
-        HashSet<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
+        Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
         if (vehicleSet == null)
             return Collections.emptySet();//空集合
         return Collections.unmodifiableSet(vehicleSet);//不可修改集合

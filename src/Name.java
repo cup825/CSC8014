@@ -1,4 +1,5 @@
 import java.util.Objects;
+
 public final class Name {
     private final String firstName;
     private final String lastName;
@@ -35,5 +36,10 @@ public final class Name {
     @Override
     public int hashCode() {
         return Objects.hash(firstName, lastName);
+    }
+
+    @Override
+    public String toString() {
+        return firstName + " " + lastName;
     }
 }
