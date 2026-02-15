@@ -3,10 +3,10 @@ public final class Van extends AbstractVehicle {
 
     public Van() {
         super("Van");
+        needCheck = false;
     }
 
     public boolean needCheck() {
-//        return duration >= 10;
         return needCheck;
     }
 
