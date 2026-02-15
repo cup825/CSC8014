@@ -10,6 +10,8 @@ public final class VehicleID {
     public static final String CAR = "car";
     public static final String VAN = "van";
 
+    public enum Type {CAR, VAN}//枚举，待学
+
     private VehicleID(String code, String numCode) {//随机生成
         this.code = code;
         this.numCode = numCode;

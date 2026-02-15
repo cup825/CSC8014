@@ -166,6 +166,7 @@ public final class VehicleManager {
             if (v instanceof Van van && duration >= 10)//是否即将被检查
                 van.setCheck(true);
             vehicleSet.add(v);
+            System.out.println("Hire successful:Vehicle " + v.getVehicleID() + " rented to " + customerRecord.getName());
             return true;
         }
         System.out.println("No available " + vehicleType + " found at the moment.");
@@ -183,9 +184,11 @@ public final class VehicleManager {
     public void returnVehicle(VehicleID vehicleID, CustomerRecord customerRecord, int mileage) {
         //add your code here. Do NOT change the method signature
         Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
+        if(vehicleSet==null) return;
         for (Vehicle v : vehicleSet) {
             if (v.getVehicleID().equals(vehicleID)) {
-                vehicleSet.remove(v);//！！有问题，待修改
+                //vehicleSet.remove(v);//！！有问题，待修改
+                vehicleSet.removeIf(v);
                 if (vehicleSet.isEmpty())
                     //hiredVehicles.remove(vehicleSet);
                     hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
