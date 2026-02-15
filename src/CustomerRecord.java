@@ -48,8 +48,8 @@ public final class CustomerRecord {
     }
 
     public Name getName() {
-        //return name;
-        return new Name(name.getFirstName(), name.getLastName());
+        return name;
+        //return new Name(name.getFirstName(), name.getLastName());
     }
 
     public int getAge() {

@@ -184,34 +184,37 @@ public final class VehicleManager {
     public void returnVehicle(VehicleID vehicleID, CustomerRecord customerRecord, int mileage) {
         //add your code here. Do NOT change the method signature
         Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
-        if(vehicleSet==null) return;
+        if (vehicleSet == null) return;
+        Vehicle target = null;
         for (Vehicle v : vehicleSet) {
             if (v.getVehicleID().equals(vehicleID)) {
-                //vehicleSet.remove(v);//！！有问题，待修改
-                vehicleSet.removeIf(v);
-                if (vehicleSet.isEmpty())
-                    //hiredVehicles.remove(vehicleSet);
-                    hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
-                v.setHired(false);
-                v.setCurrentMileage(mileage + v.getCurrentMileage());
-                v.performServiceIfDue();
-                //如果车辆是货车，必要时进行检查。？不懂
+                target = v;
                 break;
             }
+        }
+        if (target == null) return;
+        vehicleSet.remove(target);
+        if (vehicleSet.isEmpty())
+            //hiredVehicles.remove(vehicleSet);
+            hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
+        target.setHired(false);
+        target.setCurrentMileage(mileage + target.getCurrentMileage());
+        if (target.performServiceIfDue())
+            System.out.println("The vehicle has been serviced.");
+        if (target instanceof Van van && van.needCheck()) {
+            van.setCheck(false);
+            System.out.println("The van has been checked.");
         }
     }
 
     //拼写错误，就这吧
-    //此方法返回具有指定客户记录的客户当前租用的所有车辆（如果有）的不可修改集合。
+//此方法返回具有指定客户记录的客户当前租用的所有车辆（如果有）的不可修改集合。
     public Collection<Vehicle> getVechilesByCustomer(CustomerRecord customerRecord) {
         //add your code here. Do NOT change the method signature
-        //return hiredVehicles.get(customerRecord.getCustomerNum());
-
         Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
         if (vehicleSet == null)
             return Collections.emptySet();//空集合
         return Collections.unmodifiableSet(vehicleSet);//不可修改集合
-        //return null;
     }
 
 
