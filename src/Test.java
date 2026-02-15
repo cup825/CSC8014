@@ -157,7 +157,10 @@ public class Test {
         manager.returnVehicle(car.getVehicleID(), driver, 10001);
 
         Assertions.assertEquals(0, car.getCurrentMileage()); // 应被重置为 0
-        Assertions.assertTrue(manager.getHiredVehicles().isEmpty() || !manager.getHiredVehicles().containsKey(driver.getCustomerNum()));
+//        Assertions.assertTrue(manager.getHiredVehicles().isEmpty() || !manager.getHiredVehicles().containsKey(driver.getCustomerNum()));
+//        System.out.println("√ 保养里程重置逻辑测试通过");
+        boolean isDriverStillHiring = manager.getHiredVehicles().containsKey(driver.getCustomerNum());
+        Assertions.assertFalse(isDriverStillHiring);
         System.out.println("√ 保养里程重置逻辑测试通过");
     }
 }

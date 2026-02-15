@@ -11,9 +11,9 @@ public final class CustomerRecord {
     private final int customerNum;
     private static int counter = 1;//命名怪怪的
 
-    private static HashMap<String, CustomerRecord> records = new HashMap<String, CustomerRecord>();
+    private final static HashMap<String, CustomerRecord> records = new HashMap<String, CustomerRecord>();
 
-    //改成包私有(package-private)构造方法
+    //只能通过静态工厂方法创建新对象
     private CustomerRecord(String firstName, String lastName, Date birth, boolean hasCommercialLicense) {
         if (birth == null)
             throw new IllegalArgumentException("Date of birth cannot be null!");
@@ -26,6 +26,8 @@ public final class CustomerRecord {
 
     //静态工厂方法2: 复用已有对象, 省去重复new
     public static CustomerRecord getInstance(String firstName, String lastName, Date birth, boolean hasCommercialLicense) {
+        if (birth == null)//构造函数检查，这里同样要检查，因为即将调用birth.getTime()
+            throw new IllegalArgumentException("Date of birth cannot be null!");
         String s = firstName + lastName + birth.getTime();
         if (!records.containsKey(s)) {
             CustomerRecord cr = new CustomerRecord(firstName, lastName, birth, hasCommercialLicense);
@@ -57,9 +59,15 @@ public final class CustomerRecord {
         Calendar birth = Calendar.getInstance();
         birth.setTime(dateOfBirth);
         int age = today.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
-        return (birth.get(Calendar.DAY_OF_YEAR) > today.get(Calendar.DAY_OF_YEAR))
-                ? age - 1
-                : age;
+        // 如果“今年”的月份还没到生日月，或者月份到了但日子还没到，年龄就要减1
+        if (today.get(Calendar.MONTH) < birth.get(Calendar.MONTH) ||
+                (today.get(Calendar.MONTH) == birth.get(Calendar.MONTH) && today.get(Calendar.DATE) < birth.get(Calendar.DATE))) {
+            age--;
+        }
+        return age;
+//        return (birth.get(Calendar.DAY_OF_YEAR) > today.get(Calendar.DAY_OF_YEAR))
+//                ? age - 1
+//                : age;
     }
 
     @Override
@@ -82,11 +90,6 @@ public final class CustomerRecord {
     public String toString() {
         return "Customer: " + customerNum + " " + name.toString();
     }
-
-    //    You should use the java.util.Date class to represent dates in CustomerRecord.
-//    However, you must not use deprecated methods of the Date class. So, for example, in the
-//    test class, you can use java.util.Calendar to construct dates of birth of customer
-//    records. You can assume default time zone and locale
 
 }
 

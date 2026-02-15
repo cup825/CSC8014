@@ -1,5 +1,4 @@
 import java.util.Objects;
-
 public final class Name {
     private final String firstName;
     private final String lastName;

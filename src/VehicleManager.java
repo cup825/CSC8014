@@ -19,15 +19,6 @@ public final class VehicleManager {
 
     //you can add attributes and additional methods if needed.
     //you can throw an exception if needed
-//    在实现这些方法之前，你需要在该类中定义几个变量（未包含在提供的模板中）以支持其功能。因此，你需要定义变量来：
-//    维护一个单一的数据结构 allVehicles，用于存储所有添加到系统中的车辆。
-//    维护一个单一的数据结构 customers，用于存储所有现有的客户记录。
-//    维护一个单一的数据结构hiredVehicles，其中包含所有现有客户编号及其租用车辆的列表/集合。
-
-
-//    private final ArrayList<Vehicle> allVehicles;
-//    private final ArrayList<CustomerRecord> customers;
-//    private final HashMap<Integer, HashSet<Vehicle>> hiredVehicles;
     private final List<Vehicle> allVehicles;
     private final List<CustomerRecord> customers;
     private final Map<Integer, Set<Vehicle>> hiredVehicles;
@@ -48,19 +39,24 @@ public final class VehicleManager {
 
     //返回值修改为List
     public List<Vehicle> getAllVehicles() {
-        //return allVehicles;
         return Collections.unmodifiableList(allVehicles);
     }
 
     public List<CustomerRecord> getCustomers() {
-        //return customers;
         return Collections.unmodifiableList(customers);
     }
 
     //返回值修改为Map
     public Map<Integer, Set<Vehicle>> getHiredVehicles() {
-        //return hiredVehicles;
-        return Collections.unmodifiableMap(hiredVehicles);
+//        return Collections.unmodifiableMap(hiredVehicles);
+//        先让set不可修改
+        Map<Integer, Set<Vehicle>> copyMap = new HashMap<>();
+        for (Map.Entry<Integer, Set<Vehicle>> entry : hiredVehicles.entrySet()) {
+            // 关键：把里面的 Set 也包装成不可修改
+            copyMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+        }
+        // 最后把外层的 Map 也包装
+        return Collections.unmodifiableMap(copyMap);
     }
 
     //✔此方法向系统中添加指定类型（vehicleType）的新车辆，并为其分配一个车辆ID。
@@ -104,24 +100,6 @@ public final class VehicleManager {
         customers.add(customer);
         return customer;
     }
-
-
-    //此方法在给定客户记录信息和所需车辆类型(轿车或货车)的情况下:
-    //确定客户是否有资格租用指定类型的车辆(见下文规则)
-    //如果客户可以租用车辆，且有可供租用的车辆，系统会从可用车辆中为他们提供指定类型的车辆。
-    //如果车辆是面包车，且该面包车将被租用 10 天或更长时间(即持续时间>=10≥10，其中持续时间指车辆将被租用的天数)，
-    // 则该面包车的状态将变为需要检查。
-
-    // 如果客户无法租用车辆(或者客户理论上可以租用车辆但没有可用车辆)，则该方法返回false，
-    // 并打印出相应的失败提示(打印客户无法租用该车辆的原因)。
-
-    // 然后，该方法将客户编号与车辆相关联(以便公司记录已出租的车辆以及租车人信息)。
-    // 它还会返回“true” 并打印出一条信息，说明客户正在租用的车辆。判断车辆是否可以租用的规则如下:
-    //一位客户最多可租用三辆任何类型的车辆(例如，一位客户可以租用2辆汽车和1辆货车)。
-    //·车辆当前里程不得超过保养所需里程。
-    //·要租用汽车，客户必须年满18岁。
-    //要租用货车，客户必须拥有商业驾照且年龄至少为23岁。此外，该货车当前不得需要进行检查。
-    //如果车辆被租用，不应将其条目从allVehicles数据结构中移除。只需将车辆状态从“可用”改为“己租用”即可。
 
     public boolean isCar(String type) {
         return type.equalsIgnoreCase("Car");
@@ -186,17 +164,24 @@ public final class VehicleManager {
         Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
         if (vehicleSet == null) return;
         Vehicle target = null;
-        for (Vehicle v : vehicleSet) {
+        //迭代器遍历集合，并安全移除
+        Iterator<Vehicle> it = vehicleSet.iterator();
+        while (it.hasNext()) {
+            Vehicle v = it.next();
             if (v.getVehicleID().equals(vehicleID)) {
+                it.remove();
                 target = v;
                 break;
             }
+
         }
         if (target == null) return;
-        vehicleSet.remove(target);
+        //如果移除后，用户没租车了，直接移除整个用户的空Set
         if (vehicleSet.isEmpty())
             //hiredVehicles.remove(vehicleSet);
             hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
+
+        //更新车辆状态，并完成检查和维修
         target.setHired(false);
         target.setCurrentMileage(mileage + target.getCurrentMileage());
         if (target.performServiceIfDue())
@@ -216,6 +201,5 @@ public final class VehicleManager {
             return Collections.emptySet();//空集合
         return Collections.unmodifiableSet(vehicleSet);//不可修改集合
     }
-
 
 }

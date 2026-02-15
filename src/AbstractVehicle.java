@@ -24,15 +24,9 @@ public abstract class AbstractVehicle implements Vehicle {
         return vehicleType;
     }
 
-    //是否被租要检查，还是直接获取成员变量？
+    //获取是否被租
     @Override
     public boolean isHired() {
-//        Collection<HashSet<Vehicle>> values = VehicleManager.hiredVehicles.values();
-//        for (HashSet<Vehicle> hs : values) {
-//            if (hs.contains(this))
-//                return true;
-//        }
-//        return false;
         return isHired;
     }
 
@@ -60,8 +54,6 @@ public abstract class AbstractVehicle implements Vehicle {
         this.isHired = flag;
     }
 
-    //一种在服务到期时执行服务的方法。该方法会检查车辆是否已达到所需的保养里程。
-    // 如果达到，该方法会重置当前里程并返回true；否则，不采取任何行动并返回false。
     @Override
     public boolean performServiceIfDue() {
         if (currentMileage >= distanceRequirement) {
@@ -69,8 +61,11 @@ public abstract class AbstractVehicle implements Vehicle {
             return true;
         } else
             return false;
-        //return currentMileage >= distanceRequirement;
     }
 
+    @Override
+    public String toString() {
+        return vehicleType + " " + id.toString();
+    }
 }
 
