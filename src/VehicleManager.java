@@ -7,65 +7,97 @@
 
 import java.util.*;
 
+/**
+ * VehicleManager - Manages vehicles and customer records in the rental system.
+ * Implements a singleton pattern to ensure a single instance.
+ * Provides methods for adding vehicles, managing rentals, and returning vehicles.
+ */
 public final class VehicleManager {
 
     /**
-     * When you add the VehicleManager.java and Vehicle.java to your project,
-     * you will get a compilation error
-     * because the other classes are not created yet.
-     * This will be resolved once you create the required classes.
-     **/
-
-
-    //you can add attributes and additional methods if needed.
-    //you can throw an exception if needed
+     * List of all vehicles in the system.
+     */
     private final List<Vehicle> allVehicles;
+
+    /**
+     * List of all customers in the system.
+     */
     private final List<CustomerRecord> customers;
+
+    /**
+     * Map of hired vehicles, keyed by customer number.
+     * Each customer can have a set of vehicles they have rented.
+     */
     private final Map<Integer, Set<Vehicle>> hiredVehicles;
 
-    //Has a static instance of itself 拥有自身静态实例
+    /**
+     * Singleton instance of VehicleManager.
+     */
     private static final VehicleManager INSTANCE = new VehicleManager();
 
-    //VehicleManager只有一个，是单例
+    /**
+     * Private constructor to enforce singleton pattern.
+     * Initializes the lists and map for managing vehicles and customers.
+     */
     private VehicleManager() {
         allVehicles = new ArrayList<>();
         customers = new ArrayList<>();
         hiredVehicles = new HashMap<>();
     }
 
+    /**
+     * Returns the singleton instance of VehicleManager.
+     *
+     * @return The singleton instance.
+     */
     public static VehicleManager getInstance() {
         return INSTANCE;
     }
 
-    //返回值修改为List
+    /**
+     * Returns an unmodifiable list of all vehicles in the system.
+     *
+     * @return A list of all vehicles.
+     */
     public List<Vehicle> getAllVehicles() {
         return Collections.unmodifiableList(allVehicles);
     }
 
+    /**
+     * Returns an unmodifiable list of all customers in the system.
+     *
+     * @return A list of all customers.
+     */
     public List<CustomerRecord> getCustomers() {
         return Collections.unmodifiableList(customers);
     }
 
-    //返回值修改为Map
+    /**
+     * Returns an unmodifiable map of hired vehicles.
+     * Ensures that the map and its sets cannot be modified externally.
+     * A deep copy is created to prevent external modifications.
+     *
+     * @return A map of hired vehicles.
+     */
     public Map<Integer, Set<Vehicle>> getHiredVehicles() {
-//        return Collections.unmodifiableMap(hiredVehicles);
-//        先让set不可修改
         Map<Integer, Set<Vehicle>> copyMap = new HashMap<>();
         for (Map.Entry<Integer, Set<Vehicle>> entry : hiredVehicles.entrySet()) {
-            // 关键：把里面的 Set 也包装成不可修改
-            copyMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
+            copyMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue())); // Wrap sets as unmodifiable.
         }
-        // 最后把外层的 Map 也包装
-        return Collections.unmodifiableMap(copyMap);
+        return Collections.unmodifiableMap(copyMap); // Wrap the map as unmodifiable.
     }
 
-    //✔此方法向系统中添加指定类型（vehicleType）的新车辆，并为其分配一个车辆ID。
-    //可以假设当前里程为0。如果添加的车辆是货车(van)，则可以假设该货车不需要检查。成功时，此方法需要返回车辆对象。
+    /**
+     * Adds a new vehicle to the system.
+     *
+     * @param vehicleType The type of vehicle to add ("Car" or "Van").
+     * @return The newly created Vehicle object.
+     * @throws IllegalArgumentException if the vehicle type is invalid.
+     */
     public Vehicle addVehicle(String vehicleType) {
-        //add your code here. Do NOT change the method signature
         Vehicle vehicle;
         if (vehicleType.equalsIgnoreCase("Car")) {
-            vehicle = new Car();//其中包括了分配id
+            vehicle = new Car();
             allVehicles.add(vehicle);
         } else if (vehicleType.equalsIgnoreCase("Van")) {
             vehicle = new Van();
@@ -74,12 +106,15 @@ public final class VehicleManager {
             throw new IllegalArgumentException("Invalid vehicle type!");
 
         return vehicle;
-        //return null;
     }
 
-    //✔此方法返回指定类型（汽车或货车）中未被租用的车辆数量。
+    /**
+     * Returns the number of available vehicles of a specific type.
+     *
+     * @param vehicleType The type of vehicle ("Car" or "Van").
+     * @return The number of available vehicles of the specified type.
+     */
     public int noOfAvailableVehicles(String vehicleType) {
-        //add your code here. Do NOT change the method signature
         int count = 0;
         for (Vehicle v : allVehicles) {
             if (vehicleType.equalsIgnoreCase(v.getVehicleType()) && !v.isHired())
@@ -88,100 +123,127 @@ public final class VehicleManager {
         return count;
     }
 
-
-    //✔如果尚不存在客户记录，此方法会根据给定信息创建一个客户记录:
-    //每个客户的名字、姓氏和出生日期的组合都是唯一的。如果您添加的客户具有相似的现有信息，该方法将抛出异常。
-    //该方法将新创建的记录添加到现有客户的数据结构中。成功时，此方法返回CustomerRecord 对象.
+    /**
+     * Adds a new customer record to the system.
+     * Ensures that the combination of first name, last name, and date of birth is unique.
+     *
+     * @param firstName            The first name of the customer.
+     * @param lastName             The last name of the customer.
+     * @param dob                  The date of birth of the customer.
+     * @param hasCommercialLicense Whether the customer has a commercial driving license.
+     * @return The newly created CustomerRecord object.
+     * @throws IllegalArgumentException if a duplicate customer is detected.
+     */
     public CustomerRecord addCustomerRecord(String firstName, String lastName, Date dob, Boolean hasCommercialLicense) {
-        //改用静态工厂方法:两行都会检查是否重复，但用的不同的数据结构，意义也不同
         CustomerRecord customer = CustomerRecord.getInstance(firstName, lastName, dob, hasCommercialLicense);
-        if (customers.contains(customer))//contains会调用其equals，所以要重写
-            throw new IllegalArgumentException("Duplicate customer!");//待改
+        if (customers.contains(customer))
+            throw new IllegalArgumentException("Duplicate customer!");
         customers.add(customer);
         return customer;
     }
 
+    /**
+     * Checks if the given vehicle type is a car.
+     *
+     * @param type The vehicle type to check.
+     * @return True if the type is "Car", false otherwise.
+     */
     public boolean isCar(String type) {
         return type.equalsIgnoreCase("Car");
     }
 
+    /**
+     * Checks if the given vehicle type is a van.
+     *
+     * @param type The vehicle type to check.
+     * @return True if the type is "Van", false otherwise.
+     */
     public boolean isVan(String type) {
         return type.equalsIgnoreCase("Van");
     }
 
+    /**
+     * Attempts to hire a vehicle for a customer.
+     * Checks customer eligibility and vehicle availability.
+     *
+     * @param customerRecord The customer requesting the hire.
+     * @param vehicleType    The type of vehicle to hire ("Car" or "Van").
+     * @param duration       The duration of the hire in days.
+     * @return True if the hire was successful, false otherwise.
+     */
     public boolean hireVehicle(CustomerRecord customerRecord, String vehicleType, int duration) {
-        //add your code here. Do NOT change the method signature
         int customerNum = customerRecord.getCustomerNum();
-        hiredVehicles.putIfAbsent(customerNum, new HashSet<>());//如果没有租车记录
-        Set<Vehicle> vehicleSet = hiredVehicles.get(customerNum);//得到value
-        //打印资格不符合
-        //①租车数量>3的排除
+        hiredVehicles.putIfAbsent(customerNum, new HashSet<>()); // Initialize rental record if absent.
+        Set<Vehicle> vehicleSet = hiredVehicles.get(customerNum);
+
+        // Check if the customer has reached the rental limit.
         if (vehicleSet.size() >= 3) {
             System.out.println("The number of vehicle rentals exceeds the limit of 3.");
             return false;
         }
 
-        //②年龄不符的排除
-        //int age = 2026 - customerRecord.getDateOfBirth().getYear();//待改正，用Calendar类
+        // Check age and license requirements for the vehicle type.
         if (isCar(vehicleType) && customerRecord.getAge() < 18) {
             System.out.println("Customer must be at least 18 to hire a car.");
             return false;
         }
         if (isVan(vehicleType) && (customerRecord.getAge() < 23 || (!customerRecord.hasCommercialLicense()))) {
-            System.out.println("Customer must be at least 23 and has commercial license to hire a van.");
+            System.out.println("Customer must be at least 23 and have a commercial license to hire a van.");
             return false;
         }
 
-        //3.车本身
+        // Find an available vehicle that meets the criteria.
         for (Vehicle v : allVehicles) {
-            if (!v.getVehicleType().equalsIgnoreCase(vehicleType)) //类型不匹配
+            if (!v.getVehicleType().equalsIgnoreCase(vehicleType)) // Skip mismatched types.
                 continue;
-            if (v.isHired() || v.getCurrentMileage() >= v.getDistanceRequirement())//被租或需要维修
+            if (v.isHired() || v.getCurrentMileage() >= v.getDistanceRequirement()) // Skip unavailable vehicles.
                 continue;
-            if (v instanceof Van van && van.needCheck())//是否在检查
+            if (v instanceof Van van && van.needCheck()) // Skip vans requiring inspection.
                 continue;
+
+            // Assign the vehicle to the customer.
             v.setHired(true);
-            if (v instanceof Van van && duration >= 10)//是否即将被检查
+            if (v instanceof Van van && duration >= 10) // Mark vans for inspection if hired for 10+ days.
                 van.setCheck(true);
             vehicleSet.add(v);
-            System.out.println("Hire successful:Vehicle " + v.getVehicleID() + " rented to " + customerRecord.getName());
+            System.out.println("Hire successful: Vehicle " + v.getVehicleID() + " rented to " + customerRecord.getName());
             return true;
         }
+
         System.out.println("No available " + vehicleType + " found at the moment.");
-        return false;//所有车辆中没有符合条件的
+        return false; // No suitable vehicle found.
     }
 
-    //此方法会在车辆行驶达到指定里程数后，终止与给定客户记录相关联的、针对该车辆的租赁合同。
-    // 之后，该车辆可供其他人租赁。此方法的执行步骤如下:
-    //从hiredVehicles 数据结构中的客户条目里移除已归还的车辆。如果移除后该客户没有其他在租车辆，就从数据结构中删除整个客户条目。
-    //更新车辆状态，表明其不再被租用。
-    //通过添加指定的里程数来更新车辆的当前里程。
-    //若车辆需要保养，则对其进行保养。
-    //如果车辆是货车，必要时进行检查。
-    //终止不存在的合同无效。
+    /**
+     * Returns a vehicle and updates its status.
+     * Removes the vehicle from the customer's hired list, updates mileage, and performs maintenance if needed.
+     *
+     * @param vehicleID      The ID of the vehicle being returned.
+     * @param customerRecord The customer returning the vehicle.
+     * @param mileage        The mileage driven during the hire.
+     */
     public void returnVehicle(VehicleID vehicleID, CustomerRecord customerRecord, int mileage) {
-        //add your code here. Do NOT change the method signature
         Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
-        if (vehicleSet == null) return;
+        if (vehicleSet == null) return; // No vehicles hired by the customer.
+
         Vehicle target = null;
-        //迭代器遍历集合，并安全移除
         Iterator<Vehicle> it = vehicleSet.iterator();
         while (it.hasNext()) {
             Vehicle v = it.next();
-            if (v.getVehicleID().equals(vehicleID)) {
-                it.remove();
+            if (v.getVehicleID().equals(vehicleID)) { // Find the target vehicle.
+                it.remove(); // Remove the vehicle from the customer's hired list.
                 target = v;
                 break;
             }
-
         }
-        if (target == null) return;
-        //如果移除后，用户没租车了，直接移除整个用户的空Set
-        if (vehicleSet.isEmpty())
-            //hiredVehicles.remove(vehicleSet);
-            hiredVehicles.remove(customerRecord.getCustomerNum());//移除key，不是value
 
-        //更新车辆状态，并完成检查和维修
+        if (target == null) return; // Vehicle not found.
+
+        // Remove the customer from the map if no vehicles are left.
+        if (vehicleSet.isEmpty())
+            hiredVehicles.remove(customerRecord.getCustomerNum());
+
+        // Update the vehicle's status and perform maintenance if required.
         target.setHired(false);
         target.setCurrentMileage(mileage + target.getCurrentMileage());
         if (target.performServiceIfDue())
@@ -192,14 +254,17 @@ public final class VehicleManager {
         }
     }
 
-    //拼写错误，就这吧
-//此方法返回具有指定客户记录的客户当前租用的所有车辆（如果有）的不可修改集合。
+    /**
+     * Returns a collection of vehicles currently hired by a specific customer.
+     *
+     * @param customerRecord The customer whose hired vehicles are requested.
+     * @return An unmodifiable collection of vehicles hired by the customer.
+     * or an empty collection if none exist
+     */
     public Collection<Vehicle> getVechilesByCustomer(CustomerRecord customerRecord) {
-        //add your code here. Do NOT change the method signature
         Set<Vehicle> vehicleSet = hiredVehicles.get(customerRecord.getCustomerNum());
         if (vehicleSet == null)
-            return Collections.emptySet();//空集合
-        return Collections.unmodifiableSet(vehicleSet);//不可修改集合
+            return Collections.emptySet();
+        return Collections.unmodifiableSet(vehicleSet);
     }
-
 }

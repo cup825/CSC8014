@@ -6,6 +6,11 @@ import java.util.*;
  */
 public class Test {
 
+    /**
+     * Main method to execute all test cases.
+     * Catches and reports any assertion errors during testing.
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
         try {
             System.out.println("Starting comprehensive vehicle rental system tests...\n");
@@ -17,6 +22,9 @@ public class Test {
             testRentalLimit();
             testMaintenanceAndInspection();
             testReturnVehicle();
+            testInvalidVehicleType();
+            testDuplicateVehicleID();
+            testBoundaryMileage();
 
             System.out.println("\nAll test cases passed successfully.");
         } catch (AssertionError e) {
@@ -27,7 +35,10 @@ public class Test {
         }
     }
 
-    // 1. Test customer creation and uniqueness
+    /**
+     * Test customer creation and uniqueness.
+     * Ensures that duplicate customers cannot be added.
+     */
     private static void testCustomerCreation() {
         VehicleManager manager = VehicleManager.getInstance();
         Calendar cal = Calendar.getInstance();
@@ -45,7 +56,10 @@ public class Test {
         }
     }
 
-    // 2. Test vehicle creation and type validation
+    /**
+     * Test vehicle creation and type validation.
+     * Verifies that vehicles are correctly instantiated as Car or Van.
+     */
     private static void testVehicleAddition() {
         VehicleManager manager = VehicleManager.getInstance();
         Vehicle car = manager.addVehicle("Car");
@@ -59,7 +73,10 @@ public class Test {
         System.out.println("Vehicle creation test passed.");
     }
 
-    // 3. Test car rental minimum age requirement (18 years old)
+    /**
+     * Test car rental minimum age requirement.
+     * Ensures that customers under 18 cannot rent a car.
+     */
     private static void testHireCarAgeLimit() {
         VehicleManager manager = VehicleManager.getInstance();
         manager.addVehicle("Car");
@@ -75,7 +92,10 @@ public class Test {
         System.out.println("Car age restriction test passed.");
     }
 
-    // 4. Test van rental requirements (minimum 23 years old and commercial licence)
+    /**
+     * Test van rental requirements.
+     * Ensures that customers meet age and license requirements to rent a van.
+     */
     private static void testHireVanRequirements() {
         VehicleManager manager = VehicleManager.getInstance();
         manager.addVehicle("Van");
@@ -103,7 +123,10 @@ public class Test {
         System.out.println("Van eligibility test passed.");
     }
 
-    // 5. Test rental limit (maximum of three vehicles per customer)
+    /**
+     * Test rental limit.
+     * Ensures that a customer cannot rent more than three vehicles at a time.
+     */
     private static void testRentalLimit() {
         VehicleManager manager = VehicleManager.getInstance();
         Calendar cal = Calendar.getInstance();
@@ -126,7 +149,10 @@ public class Test {
         System.out.println("Rental limit test passed.");
     }
 
-    // 6. Test van inspection requirement for long-term rental (>= 10 days)
+    /**
+     * Test van inspection requirement for long-term rental.
+     * Verifies that vans are flagged for inspection after rentals of 10 or more days.
+     */
     private static void testMaintenanceAndInspection() {
         VehicleManager manager = VehicleManager.getInstance();
         manager.addVehicle("Van");
@@ -152,7 +178,10 @@ public class Test {
         System.out.println("Van inspection reset test passed.");
     }
 
-    // 7. Test mileage reset after exceeding maintenance threshold
+    /**
+     * Test mileage reset after exceeding maintenance threshold.
+     * Ensures that vehicles are serviced and mileage is reset after return.
+     */
     private static void testReturnVehicle() {
         VehicleManager manager = VehicleManager.getInstance();
         Vehicle car = manager.addVehicle("Car");
@@ -171,4 +200,48 @@ public class Test {
 
         System.out.println("Mileage reset test passed.");
     }
+
+    /**
+     * Test invalid vehicle type addition.
+     * Ensures that adding an invalid vehicle type throws an exception.
+     */
+    private static void testInvalidVehicleType() {
+        VehicleManager manager = VehicleManager.getInstance();
+        try {
+            manager.addVehicle("Bike");
+            Assertions.assertNotReached();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Invalid vehicle type test passed.");
+        }
+    }
+
+    /**
+     * Test duplicate vehicle ID generation.
+     * Ensures that no two vehicles have the same ID.
+     */
+    private static void testDuplicateVehicleID() {
+        VehicleManager manager = VehicleManager.getInstance();
+        Vehicle car1 = manager.addVehicle("Car");
+        Vehicle car2 = manager.addVehicle("Car");
+
+        Assertions.assertNotEquals(car1.getVehicleID(), car2.getVehicleID());
+
+        System.out.println("Duplicate vehicle ID test passed.");
+    }
+
+    /**
+     * Test boundary mileage for service.
+     * Ensures that vehicles are serviced exactly at the distance requirement.
+     */
+    private static void testBoundaryMileage() {
+        VehicleManager manager = VehicleManager.getInstance();
+        Vehicle car = manager.addVehicle("Car");
+
+        car.setCurrentMileage(10000);
+        Assertions.assertTrue(car.performServiceIfDue());
+        Assertions.assertEquals(0, car.getCurrentMileage());
+
+        System.out.println("Boundary mileage test passed.");
+    }
 }
+

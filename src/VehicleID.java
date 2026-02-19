@@ -2,39 +2,59 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * VehicleID - Represents a unique identifier for a vehicle.
+ * Ensures uniqueness and provides factory methods for creation.
+ */
 public final class VehicleID {
     private final String code;
     private final String numCode;
-    private static final Set<VehicleID> vehicleIDs = new HashSet<>();//在这里初始化并且static，因为公用一个
-
+    private static final Set<VehicleID> vehicleIDs = new HashSet<>();
     public static final String CAR = "car";
     public static final String VAN = "van";
 
-    public enum Type {CAR, VAN}//枚举，待学
+    //Enum representing the types of vehicles.
+    public enum Type {CAR, VAN}
 
-    private VehicleID(String code, String numCode) {//随机生成
+    /**
+     * Private constructor to create a VehicleID instance.
+     * This ensures that VehicleID objects can only be created through the static factory method.
+     *
+     * @param code    The alphanumeric code for the vehicle.
+     * @param numCode The numeric code for the vehicle.
+     */
+    private VehicleID(String code, String numCode) {
         this.code = code;
         this.numCode = numCode;
     }
 
-    //禁止直接new，只能通过静态方法调用
-    //静态工厂方法1: 唯一性
+    /**
+     * Static factory method to create or retrieve a unique VehicleID instance.
+     * Ensures that no two VehicleID objects have the same code and numCode combination.
+     *
+     * @param type The type of vehicle ("car" or "van").
+     * @return A unique VehicleID instance.
+     */
     public static VehicleID getInstance(String type) {
         VehicleID id;
-        //do-while 与while的区别：do-while是不管咋样先执行一次，然后如果while判断成立，继续执行循环
         do {
-            if (type.equalsIgnoreCase(CAR))
+            if (type.equalsIgnoreCase(CAR)) {
                 id = new VehicleID(generateCode(CAR), generateNum(CAR));
-            else if (type.equalsIgnoreCase(VAN))
+            } else if (type.equalsIgnoreCase(VAN)) {
                 id = new VehicleID(generateCode(VAN), generateNum(VAN));
-            else
+            } else {
                 throw new IllegalArgumentException("Invalid vehicle type: " + type);
-        }
-        while (!vehicleIDs.add(id));
+            }
+        } while (!vehicleIDs.add(id)); // Ensure uniqueness by adding to the set.
         return id;
     }
 
-    //这两个方法只能改成静态方法吗？
+    /**
+     * Generates a random alphanumeric code for the vehicle.
+     *
+     * @param type The type of vehicle ("car" or "van").
+     * @return A string representing the alphanumeric code.
+     */
     private static String generateCode(String type) {
         char typeChar = type.equalsIgnoreCase(CAR) ? 'C' : 'V';
         char randomLetter = (char) ('A' + (int) (Math.random() * 26));
@@ -42,28 +62,56 @@ public final class VehicleID {
         return "" + typeChar + randomLetter + randomNum;
     }
 
+    /**
+     * Generates a random numeric code for the vehicle.
+     * Ensures that the code is even for cars and odd for vans.
+     *
+     * @param type The type of vehicle ("car" or "van").
+     * @return A string representing the numeric code.
+     */
     private static String generateNum(String type) {
-        //怎么生成奇or偶
         int even = (int) (Math.random() * 500) * 2;
         return type.equalsIgnoreCase(CAR)
                 ? String.format("%03d", even)
                 : String.format("%03d", (even + 1));
     }
 
+    /**
+     * Returns the alphanumeric code of the vehicle.
+     *
+     * @return The alphanumeric code.
+     */
     public String getCode() {
         return code;
     }
 
+    /**
+     * Returns the numeric code of the vehicle.
+     *
+     * @return The numeric code.
+     */
     public String getNumCode() {
         return numCode;
     }
 
+    /**
+     * Returns a string representation of the VehicleID.
+     * Combines the alphanumeric and numeric codes.
+     *
+     * @return A string representation of the VehicleID.
+     */
     @Override
     public String toString() {
         return code + "-" + numCode;
     }
 
-    //Set检验唯一性，所以要重写
+    /**
+     * Checks if this VehicleID is equal to another object.
+     * Two VehicleID objects are considered equal if their code and numCode are the same.
+     *
+     * @param o The object to compare with.
+     * @return True if the objects are equal, false otherwise.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o)
@@ -74,6 +122,12 @@ public final class VehicleID {
             return false;
     }
 
+    /**
+     * Returns the hash code for this VehicleID.
+     * The hash code is based on the code and numCode.
+     *
+     * @return The hash code of this VehicleID.
+     */
     @Override
     public int hashCode() {
         return Objects.hash(numCode, code);
