@@ -13,9 +13,6 @@ public final class VehicleID {
     public static final String CAR = "car";
     public static final String VAN = "van";
 
-    //Enum representing the types of vehicles.
-    public enum Type {CAR, VAN}
-
     /**
      * Private constructor to create a VehicleID instance.
      * This ensures that VehicleID objects can only be created through the static factory method.

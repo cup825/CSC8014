@@ -58,18 +58,18 @@ public final class VehicleManager {
     }
 
     /**
-     * Returns an unmodifiable map of hired vehicles.
-     * Ensures that the map and its sets cannot be modified externally.
-     * A deep copy is created to prevent external modifications.
+     * Returns a defensive unmodifiable copy of the hiredVehicles map.
+     * The returned map and its associated sets cannot be modified externally,
+     * preserving encapsulation of the internal state.
      *
      * @return A map of hired vehicles.
      */
     public Map<Integer, Set<Vehicle>> getHiredVehicles() {
         Map<Integer, Set<Vehicle>> copyMap = new HashMap<>();
         for (Map.Entry<Integer, Set<Vehicle>> entry : hiredVehicles.entrySet()) {
-            copyMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue())); // Wrap sets as unmodifiable.
+            copyMap.put(entry.getKey(), Collections.unmodifiableSet(entry.getValue()));
         }
-        return Collections.unmodifiableMap(copyMap); // Wrap the map as unmodifiable.
+        return Collections.unmodifiableMap(copyMap);
     }
 
     /**

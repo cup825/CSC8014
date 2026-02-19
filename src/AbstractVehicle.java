@@ -10,20 +10,23 @@ public abstract class AbstractVehicle implements Vehicle {
     private boolean isHired;
 
     /**
-     * Constructor for AbstractVehicle.
-     * Initializes the vehicle type, ID, and other properties.
-     * The ID is generated using a factory method to ensure uniqueness.
-     * The distance requirement is set based on the vehicle type.
-     * Cars require service every 10,000 miles, while vans require service every 5,000 miles.
+     * Constructs an abstract vehicle with the specified type.
+     * A unique ID is generated using the VehicleID factory method,
+     * and the service distance is determined by the vehicle type.
      *
-     * @param vehicleType The type of the vehicle (e.g., "Car", "Van").
+     * @param vehicleType the type of the vehicle ("Car" or "Van")
+     * @throws IllegalArgumentException if the vehicle type is invalid
      */
     public AbstractVehicle(String vehicleType) {
+        if (!vehicleType.equalsIgnoreCase(VehicleID.CAR) &&
+                !vehicleType.equalsIgnoreCase(VehicleID.VAN)) {
+            throw new IllegalArgumentException("Invalid vehicle type.");
+        }
         this.vehicleType = vehicleType;
         id = VehicleID.getInstance(vehicleType); // Generate a unique ID using the factory method.
-        currentMileage = 0; // Initialize mileage to 0.
-        isHired = false; // Default to not hired.
-        distanceRequirement = vehicleType.equalsIgnoreCase(VehicleID.CAR) ? 10000 : 5000; // Set service distance.
+        currentMileage = 0;
+        isHired = false;
+        distanceRequirement = vehicleType.equalsIgnoreCase(VehicleID.CAR) ? 10000 : 5000;
     }
 
     /**
@@ -111,8 +114,8 @@ public abstract class AbstractVehicle implements Vehicle {
         if (currentMileage >= distanceRequirement) { // Check if service is due.
             currentMileage = 0; // Reset mileage after service.
             return true; // Service performed.
-        } else
-            return false; // Service not required.
+        }
+        return false; // Service not required.
     }
 
     /**
