@@ -13,27 +13,12 @@ import java.util.*;
  * Provides methods for adding vehicles, managing rentals, and returning vehicles.
  */
 public final class VehicleManager {
-
-    /**
-     * List of all vehicles in the system.
-     */
-    private final List<Vehicle> allVehicles;
-
-    /**
-     * List of all customers in the system.
-     */
-    private final List<CustomerRecord> customers;
-
-    /**
-     * Map of hired vehicles, keyed by customer number.
-     * Each customer can have a set of vehicles they have rented.
-     */
+    private final List<Vehicle> allVehicles; // List of all vehicles in the system.
+    private final List<CustomerRecord> customers;    //List of all customers in the system.
+    // Map of hired vehicles, keyed by customer number.
+    // Each customer can have a set of vehicles they have rented.
     private final Map<Integer, Set<Vehicle>> hiredVehicles;
-
-    /**
-     * Singleton instance of VehicleManager.
-     */
-    private static final VehicleManager INSTANCE = new VehicleManager();
+    private static final VehicleManager INSTANCE = new VehicleManager(); // Singleton instance of VehicleManager.
 
     /**
      * Private constructor to enforce singleton pattern.
