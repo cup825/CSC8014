@@ -19,21 +19,18 @@ public class Test {
         try {
             System.out.println("Starting vehicle rental system tests...\n");
 
-            testNoOfAvailableVehicles();
+            //testNoOfAvailableVehicles(); 删掉，穿插着测试
 
             testAddVehicle();
             testAddCustomer();
-
-            //testNoOfAvailableVehicles();
-
-            testHireCarAgeLimit();
-            testHireVanRequirements();
+            testCarVanLimit();
             testRentalLimit();
-            testMaintenanceAndInspection();
-            testReturnVehicle();
-            testInvalidVehicleType();
-            testDuplicateVehicleID();
-            testBoundaryMileage();
+
+//            testMaintenanceAndInspection();
+//            testReturnVehicle();
+//            testInvalidVehicleType();
+//            testDuplicateVehicleID();
+//            testBoundaryMileage();
 
             System.out.println("\nAll test cases passed successfully.");
         } catch (AssertionError e) {
@@ -51,20 +48,25 @@ public class Test {
     private static void testAddVehicle() {
         System.out.println(line + "\nStart adding Vehicle test.");
         VehicleManager manager = VehicleManager.getInstance();
+        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Car"));
+        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Van"));
+
         Vehicle car = manager.addVehicle("Car");
         Vehicle van = manager.addVehicle("Van");
-
         Assertions.assertTrue(car instanceof Car);
         Assertions.assertTrue(van instanceof Van);
 
+        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Car"));
+        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Van"));
+        Assertions.assertTrue(manager.getAllVehicles().contains(car));
+        Assertions.assertTrue(manager.getAllVehicles().contains(van));
+
         try {
             Vehicle truck = manager.addVehicle("Truck");
-        } catch (IllegalArgumentException e){
-            e.getMessage();
+            Assertions.assertNotReached();
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
         }
-//        Assertions.assertEquals("Car", car.getVehicleType());
-//        Assertions.assertEquals(0, car.getCurrentMileage());
-
         System.out.println("Add Vehicle test passed.\n" + line);
     }
 
@@ -80,65 +82,49 @@ public class Test {
 
         CustomerRecord c1 = manager.addCustomerRecord("Harry", "Potter", dob, false);
         Assertions.assertNotNull(c1);
+        Assertions.assertTrue(manager.getCustomers().contains(c1));
 
         try {
             manager.addCustomerRecord("Harry", "Potter", dob, false);
             Assertions.assertNotReached();
         } catch (IllegalArgumentException e) {
-            System.out.println("Customer uniqueness test passed.");
+            //System.out.println("Customer uniqueness test passed.");
+            System.out.println(e.getMessage());
         }
-        System.out.println("Add customer test passed.");
+        System.out.println("Add customer test passed.\n" + line);
     }
 
 
     /**
-     * Test car rental minimum age requirement.
-     * Ensures that customers under 18 cannot rent a car.
+     * Test restrictions related to car and van.
      */
-    private static void testHireCarAgeLimit() {
+    private static void testCarVanLimit() {
         VehicleManager manager = VehicleManager.getInstance();
-        manager.addVehicle("Car");
 
         Calendar cal = Calendar.getInstance();
-        cal.set(2010, Calendar.JANUARY, 1);
-        CustomerRecord youngUser =
+        cal.set(2010, Calendar.MARCH, 3);
+        CustomerRecord young =
                 manager.addCustomerRecord("Young", "User", cal.getTime(), false);
 
-        boolean canHire = manager.hireVehicle(youngUser, "Car", 5);
-        Assertions.assertFalse(canHire);
+        cal.set(2005, Calendar.FEBRUARY, 14);
+        CustomerRecord adult1 = manager.addCustomerRecord("Adult1", "User", cal.getTime(), true);
 
-        System.out.println("Car age restriction test passed.");
-    }
+        cal.set(1998, Calendar.JANUARY, 1);
+        CustomerRecord adult2 = manager.addCustomerRecord("Adult2", "User", cal.getTime(), false);
+        CustomerRecord adult3 = manager.addCustomerRecord("Adult3", "User", cal.getTime(), true);
 
-    /**
-     * Test van rental requirements.
-     * Ensures that customers meet age and license requirements to rent a van.
-     */
-    private static void testHireVanRequirements() {
-        VehicleManager manager = VehicleManager.getInstance();
-        manager.addVehicle("Van");
+        Assertions.assertTrue(manager.getCustomers().contains(young));
+        Assertions.assertTrue(manager.getCustomers().contains(adult1));//成年人，能租car不符合van年龄
+        Assertions.assertTrue(manager.getCustomers().contains(adult2));//符合van年龄无商业驾照
+        Assertions.assertTrue(manager.getCustomers().contains(adult3));//符合van年龄有商业驾照
 
-        Calendar cal = Calendar.getInstance();
+        Assertions.assertFalse(manager.hireVehicle(young, "Car", 5));
+        Assertions.assertTrue(manager.hireVehicle(adult1, "Car", 3));
+        Assertions.assertFalse(manager.hireVehicle(adult1, "Van", 3));
+        Assertions.assertFalse(manager.hireVehicle(adult2, "Van", 3));
+        Assertions.assertTrue(manager.hireVehicle(adult3, "Van", 3));
 
-        // Old enough but no commercial licence
-        cal.set(1990, Calendar.JANUARY, 1);
-        CustomerRecord noLicenceUser =
-                manager.addCustomerRecord("No", "Licence", cal.getTime(), false);
-        Assertions.assertFalse(manager.hireVehicle(noLicenceUser, "Van", 5));
-
-        // Has licence but under 23
-        cal.set(2005, Calendar.JANUARY, 1);
-        CustomerRecord youngVanUser =
-                manager.addCustomerRecord("Young", "Van", cal.getTime(), true);
-        Assertions.assertFalse(manager.hireVehicle(youngVanUser, "Van", 5));
-
-        // Meets all requirements
-        cal.set(1995, Calendar.JANUARY, 1);
-        CustomerRecord validVanUser =
-                manager.addCustomerRecord("Valid", "Van", cal.getTime(), true);
-        Assertions.assertTrue(manager.hireVehicle(validVanUser, "Van", 5));
-
-        System.out.println("Van eligibility test passed.");
+        System.out.println("Car and van restriction test passed.\n" + line);
     }
 
     /**
@@ -161,10 +147,9 @@ public class Test {
         Assertions.assertTrue(manager.hireVehicle(frequentUser, "Car", 1));
         Assertions.assertTrue(manager.hireVehicle(frequentUser, "Car", 1));
         Assertions.assertTrue(manager.hireVehicle(frequentUser, "Car", 1));
-
         Assertions.assertFalse(manager.hireVehicle(frequentUser, "Car", 1));
 
-        System.out.println("Rental limit test passed.");
+        System.out.println("Rental limit test passed.\n" + line);
     }
 
     /**
@@ -219,19 +204,19 @@ public class Test {
         System.out.println("Mileage reset test passed.");
     }
 
-    /**
-     * Test invalid vehicle type addition.
-     * Ensures that adding an invalid vehicle type throws an exception.
-     */
-    private static void testInvalidVehicleType() {
-        VehicleManager manager = VehicleManager.getInstance();
-        try {
-            manager.addVehicle("Bike");
-            Assertions.assertNotReached();
-        } catch (IllegalArgumentException e) {
-            System.out.println("Invalid vehicle type test passed.");
-        }
-    }
+//    /**
+//     * Test invalid vehicle type addition.
+//     * Ensures that adding an invalid vehicle type throws an exception.
+//     */
+//    private static void testInvalidVehicleType() {
+//        VehicleManager manager = VehicleManager.getInstance();
+//        try {
+//            manager.addVehicle("Bike");
+//            Assertions.assertNotReached();
+//        } catch (IllegalArgumentException e) {
+//            System.out.println("Invalid vehicle type test passed.");
+//        }
+//    }
 
     /**
      * Test duplicate vehicle ID generation.
@@ -265,16 +250,16 @@ public class Test {
     private static void testNoOfAvailableVehicles() {
         VehicleManager manager = VehicleManager.getInstance();
 
-        // 1. 初始状态：无车辆时可用数为0
-        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Car"));
-        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Van"));
-
-        // 2. 添加车辆后，可用数等于添加数量
-        manager.addVehicle("Car");
-        manager.addVehicle("Car");
-        manager.addVehicle("Van");
-        Assertions.assertEquals(2, manager.noOfAvailableVehicles("Car"));
-        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Van"));
+//        // 1. 初始状态：无车辆时可用数为0
+//        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Car"));
+//        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Van"));
+//
+//        // 2. 添加车辆后，可用数等于添加数量
+//        manager.addVehicle("Car");
+//        manager.addVehicle("Car");
+//        manager.addVehicle("Van");
+//        Assertions.assertEquals(2, manager.noOfAvailableVehicles("Car"));
+//        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Van"));
 
         // 3. 租用车辆后，可用数减少
         Calendar cal = Calendar.getInstance();

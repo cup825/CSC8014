@@ -169,11 +169,11 @@ public final class VehicleManager {
 
         // Check age and license requirements for the vehicle type.
         if (isCar(vehicleType) && customerRecord.getAge() < 18) {
-            System.out.println("Customer must be at least 18 to hire a car.");
+            System.out.println("Hire failed: Customer must be at least 18 to hire a car.");
             return false;
         }
         if (isVan(vehicleType) && (customerRecord.getAge() < 23 || (!customerRecord.hasCommercialLicense()))) {
-            System.out.println("Customer must be at least 23 and have a commercial license to hire a van.");
+            System.out.println("Hire failed: Customer must be at least 23 and have a commercial license to hire a van.");
             return false;
         }
 
@@ -195,7 +195,7 @@ public final class VehicleManager {
             return true;
         }
 
-        System.out.println("No available " + vehicleType + " found at the moment.");
+        System.out.println("Hire failed: No available " + vehicleType + " found at the moment.");
         return false; // No suitable vehicle found.
     }
 
