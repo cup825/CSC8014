@@ -1,5 +1,9 @@
 /**
- * VehicleIDTest – Verifies the logic of VehicleID
+ * VehicleIDTest – Verifies the logic and business rules of the VehicleID class.
+ *
+ * @author Ziyue Ren
+ * @see VehicleID
+ * @see Assertions
  */
 public class VehicleIDTest {
     static String line = "____________________________";

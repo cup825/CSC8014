@@ -3,6 +3,10 @@ import java.util.*;
 
 /**
  * VehicleManagerTest – Verifies the logic of VehicleManager
+ *
+ * @author Ziyue Ren
+ * @see VehicleManager
+ * @see Assertions
  */
 public class VehicleManagerTest {
     static String line = "____________________________";

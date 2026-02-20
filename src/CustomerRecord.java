@@ -18,7 +18,7 @@ public final class CustomerRecord {
     private final int customerNum;
     private static int counter = 1;//A counter to generate unique customer numbers.
     //A map to store unique customer records based on their name and date of birth.
-    private final static HashMap<String, CustomerRecord> records = new HashMap<>();//
+    private final static HashMap<String, CustomerRecord> records = new HashMap<>();
 
     /**
      * Private constructor to create a new CustomerRecord.

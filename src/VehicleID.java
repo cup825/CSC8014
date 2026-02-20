@@ -3,11 +3,11 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * VehicleIDTest – Verifies the logic and business rules of VehicleID.
+ * VehicleID - Represents a unique identifier for a vehicle.
+ * Ensures uniqueness and bases on generation rules
  *
  * @author Ziyue Ren
- * @see VehicleID
- * @see Assertions
+ * @see Vehicle
  */
 public final class VehicleID {
     private final String code;
