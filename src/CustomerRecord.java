@@ -6,6 +6,10 @@ import java.util.Calendar;
 /**
  * CustomerRecord - Represents a customer in the vehicle rental system.
  * Stores customer details and ensures uniqueness.
+ *
+ * @author Ziyue Ren
+ * @see Name
+ * @see VehicleManager
  */
 public final class CustomerRecord {
     private final Name name;
@@ -13,16 +17,16 @@ public final class CustomerRecord {
     private final boolean hasCommercialLicense;
     private final int customerNum;
     private static int counter = 1;//A counter to generate unique customer numbers.
-     //A map to store unique customer records based on their name and date of birth.
+    //A map to store unique customer records based on their name and date of birth.
     private final static HashMap<String, CustomerRecord> records = new HashMap<>();//
 
     /**
      * Private constructor to create a new CustomerRecord.
      * This ensures that CustomerRecord objects can only be created through the static factory method.
      *
-     * @param firstName The first name of the customer.
-     * @param lastName The last name of the customer.
-     * @param birth The date of birth of the customer.
+     * @param firstName            The first name of the customer.
+     * @param lastName             The last name of the customer.
+     * @param birth                The date of birth of the customer.
      * @param hasCommercialLicense Whether the customer has a commercial driving license.
      */
     private CustomerRecord(String firstName, String lastName, Date birth, boolean hasCommercialLicense) {
@@ -38,9 +42,9 @@ public final class CustomerRecord {
      * Static factory method to create or retrieve a CustomerRecord.
      * Ensures uniqueness based on name and date of birth.
      *
-     * @param firstName The first name of the customer.
-     * @param lastName The last name of the customer.
-     * @param birth The date of birth of the customer.
+     * @param firstName            The first name of the customer.
+     * @param lastName             The last name of the customer.
+     * @param birth                The date of birth of the customer.
      * @param hasCommercialLicense Whether the customer has a commercial driving license.
      * @return A unique CustomerRecord instance.
      */

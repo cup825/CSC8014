@@ -1,7 +1,12 @@
 /**
  * Van - Represents a van in the vehicle rental system.
  * Includes additional properties for inspection requirements.
+ *
+ * @author Ziyue Ren
+ * @see AbstractVehicle
+ * @see VehicleID
  */
+
 public final class Van extends AbstractVehicle {
     /**
      * Indicates whether the van requires an inspection.

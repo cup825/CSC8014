@@ -3,6 +3,9 @@ import java.util.Objects;
 /**
  * Name - Represents a person's name.
  * Ensures immutability and validates input.
+ *
+ * @author Ziyue Ren
+ * @see CustomerRecord
  */
 public final class Name {
     private final String firstName;

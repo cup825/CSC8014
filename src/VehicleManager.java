@@ -10,7 +10,11 @@ import java.util.*;
 /**
  * VehicleManager - Manages vehicles and customer records in the rental system.
  * Implements a singleton pattern to ensure a single instance.
- * Provides methods for adding vehicles, managing rentals, and returning vehicles.
+ *
+ * @author Ziyue Ren
+ * @see Vehicle
+ * @see CustomerRecord
+ * @see VehicleID
  */
 public final class VehicleManager {
     private final List<Vehicle> allVehicles; // List of all vehicles in the system.
@@ -81,6 +85,9 @@ public final class VehicleManager {
      */
     public Vehicle addVehicle(String vehicleType) {
         Vehicle vehicle;
+        if (vehicleType == null || vehicleType.trim().isEmpty()) {
+            throw new IllegalArgumentException("Vehicle type cannot be null or empty!");
+        }
         if (vehicleType.equalsIgnoreCase("Car")) {
             vehicle = new Car();
             allVehicles.add(vehicle);
@@ -183,7 +190,7 @@ public final class VehicleManager {
                 continue;
             if (v.isHired() || v.getCurrentMileage() >= v.getDistanceRequirement()) // Skip unavailable vehicles.
                 continue;
-            if (v instanceof Van van && van.needCheck()) // Skip vans requiring inspection.
+            if (v instanceof Van van && van.needCheck()) // Skip vans requiring check.
                 continue;
 
             // Assign the vehicle to the customer.

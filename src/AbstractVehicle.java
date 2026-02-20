@@ -1,7 +1,12 @@
 /**
  * AbstractVehicle - Base class for all vehicle types.
  * Implements common functionality for vehicles.
+ *
+ * @author Ziyue Ren
+ * @see Vehicle
+ * @see VehicleID
  */
+
 public abstract class AbstractVehicle implements Vehicle {
     private final VehicleID id;
     private final String vehicleType;
