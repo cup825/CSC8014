@@ -94,7 +94,7 @@ public final class VehicleManager {
     }
 
     /**
-     * Returns the number of available vehicles of a specific type.
+     * Returns the number of vehicles of the specified type (a car or a van) that are Not hired
      *
      * @param vehicleType The type of vehicle ("Car" or "Van").
      * @return The number of available vehicles of the specified type.

@@ -9,11 +9,14 @@ public class Test {
     /**
      * Main method to execute all test cases.
      * Catches and reports any assertion errors during testing.
+     *
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
         try {
             System.out.println("Starting comprehensive vehicle rental system tests...\n");
+
+            testNoOfAvailableVehicles();
 
             testCustomerCreation();
             testVehicleAddition();
@@ -242,6 +245,48 @@ public class Test {
         Assertions.assertEquals(0, car.getCurrentMileage());
 
         System.out.println("Boundary mileage test passed.");
+    }
+
+    private static void testNoOfAvailableVehicles() {
+        VehicleManager manager = VehicleManager.getInstance();
+
+        // 1. 初始状态：无车辆时可用数为0
+        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Car"));
+        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Van"));
+
+        // 2. 添加车辆后，可用数等于添加数量
+        manager.addVehicle("Car");
+        manager.addVehicle("Car");
+        manager.addVehicle("Van");
+        Assertions.assertEquals(2, manager.noOfAvailableVehicles("Car"));
+        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Van"));
+
+        // 3. 租用车辆后，可用数减少
+        Calendar cal = Calendar.getInstance();
+        cal.set(1990, Calendar.JANUARY, 1); // 满足租车年龄要求
+        CustomerRecord testCustomer = manager.addCustomerRecord("Test", "User", cal.getTime(), true);
+        // 租用1辆Car
+        boolean hireCarSuccess = manager.hireVehicle(testCustomer, "Car", 5);
+        Assertions.assertTrue(hireCarSuccess);
+        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Car")); // 剩余1辆Car可用
+        //Assertions.assertEquals(1, manager.noOfAvailableVehicles("Van")); // Van不受影响
+
+        // 4. 租用所有Car后，Car可用数为0
+        boolean hireSecondCarSuccess = manager.hireVehicle(testCustomer, "Car", 5);
+        Assertions.assertTrue(hireSecondCarSuccess);
+        Assertions.assertEquals(0, manager.noOfAvailableVehicles("Car"));
+
+        // 5. 归还车辆后，可用数恢复
+        // 获取该客户租用的Car
+        Vehicle hiredCar = manager.getVechilesByCustomer(testCustomer).stream()
+                .filter(v -> v.getVehicleType().equalsIgnoreCase("Car"))
+                .findFirst()
+                .orElseThrow();
+        // 归还车辆
+        manager.returnVehicle(hiredCar.getVehicleID(), testCustomer, 100);
+        Assertions.assertEquals(1, manager.noOfAvailableVehicles("Car"));
+
+        System.out.println("noOfAvailableVehicles test passed.");
     }
 }
 
