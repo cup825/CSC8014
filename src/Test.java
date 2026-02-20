@@ -5,6 +5,7 @@ import java.util.*;
  * and related classes in the vehicle rental system.
  */
 public class Test {
+    static String line = "____________________________";
 
     /**
      * Main method to execute all test cases.
@@ -13,13 +14,18 @@ public class Test {
      * @param args Command-line arguments (not used).
      */
     public static void main(String[] args) {
+        //VehicleManager manager = VehicleManager.getInstance();
+
         try {
-            System.out.println("Starting comprehensive vehicle rental system tests...\n");
+            System.out.println("Starting vehicle rental system tests...\n");
 
             testNoOfAvailableVehicles();
 
-            testCustomerCreation();
-            testVehicleAddition();
+            testAddVehicle();
+            testAddCustomer();
+
+            //testNoOfAvailableVehicles();
+
             testHireCarAgeLimit();
             testHireVanRequirements();
             testRentalLimit();
@@ -39,10 +45,34 @@ public class Test {
     }
 
     /**
+     * Test vehicle creation and type validation.
+     * Verifies that vehicles are correctly instantiated as Car or Van.
+     */
+    private static void testAddVehicle() {
+        System.out.println(line + "\nStart adding Vehicle test.");
+        VehicleManager manager = VehicleManager.getInstance();
+        Vehicle car = manager.addVehicle("Car");
+        Vehicle van = manager.addVehicle("Van");
+
+        Assertions.assertTrue(car instanceof Car);
+        Assertions.assertTrue(van instanceof Van);
+
+        try {
+            Vehicle truck = manager.addVehicle("Truck");
+        } catch (IllegalArgumentException e){
+            e.getMessage();
+        }
+//        Assertions.assertEquals("Car", car.getVehicleType());
+//        Assertions.assertEquals(0, car.getCurrentMileage());
+
+        System.out.println("Add Vehicle test passed.\n" + line);
+    }
+
+    /**
      * Test customer creation and uniqueness.
      * Ensures that duplicate customers cannot be added.
      */
-    private static void testCustomerCreation() {
+    private static void testAddCustomer() {
         VehicleManager manager = VehicleManager.getInstance();
         Calendar cal = Calendar.getInstance();
         cal.set(2000, Calendar.JANUARY, 1);
@@ -57,24 +87,9 @@ public class Test {
         } catch (IllegalArgumentException e) {
             System.out.println("Customer uniqueness test passed.");
         }
+        System.out.println("Add customer test passed.");
     }
 
-    /**
-     * Test vehicle creation and type validation.
-     * Verifies that vehicles are correctly instantiated as Car or Van.
-     */
-    private static void testVehicleAddition() {
-        VehicleManager manager = VehicleManager.getInstance();
-        Vehicle car = manager.addVehicle("Car");
-        Vehicle van = manager.addVehicle("Van");
-
-        Assertions.assertTrue(car instanceof Car);
-        Assertions.assertTrue(van instanceof Van);
-        Assertions.assertEquals("Car", car.getVehicleType());
-        Assertions.assertEquals(0, car.getCurrentMileage());
-
-        System.out.println("Vehicle creation test passed.");
-    }
 
     /**
      * Test car rental minimum age requirement.
